@@ -1,0 +1,90 @@
+<div class="main__right">
+    <h2><img loading="lazy" src="~/../assets/images/icon-doc.svg" alt="icon doc"> {{coreConstante.Titulos.VerResoluciones}}</h2>
+    <app-alerta *ngIf="warning.length > 0" [msg]="warning"></app-alerta>
+
+
+    <div class="detail">
+        <div class="container mb-3">
+            <div class="row">
+                <div class="col-sm form__right">
+                    <b style="color: var(--second-color);">Tipo Documento</b>
+                    <select  id="slc-tipodocumento"  class="form-control rounded-pill ng-pristine ng-valid ng-touched" 
+                        [(ngModel)]="idTipoDocumento" (change)="tipoDocSelectChange()" 
+                        [disabled]="consultaExitosa">
+                        <option value="0">Seleccione</option>
+                        @for (tipoDocumento of tiposDocumentoIdentidad; track $index) {
+                        <option value="{{tipoDocumento.IdTipoDocumento}}">{{tipoDocumento.DescripcionTipoDocumento}}</option>
+                        }
+                    </select>
+                </div>
+                <div class="col-sm">
+                    <b>Número de Documento</b>    
+                    <input [(ngModel)]="numeroDocumento" id="txt-numero" type="text"
+                        (keypress)="dniNumberOnly($event)" class="form-control rounded-pill"
+                        [disabled]=" idTipoDocumento == '0' || consultaExitosa" [maxlength]="coreConstante.TipoDocumentoLenght.Otro"/>    
+                </div>
+                <div class="col-sm">
+                    <b>&nbsp; </b>
+                    <div class="info__print info__print_search">
+                        @if(!consultaExitosa){
+                        <a (click)="listarResoluciones()" class="bton bton-second"><img
+                                src="~/../assets/images/lupa-buscador.svg" class="print-desktop"
+                                alt="buscar">  <span>Buscar</span></a>
+                        }
+                        @else{
+                        <a (click)="limpiarCampos()" class="bton bton-second"><span>Nueva busqueda</span></a>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>       
+
+        @if(consultaExitosa && warning.length == 0){
+        <app-usuario [mostrarImprimir]="false" [nombreCompleto]="nombreCompleto" [tipoDocumento]="tipoDocumento"
+            [numeroDocumento]="numeroDocumento"></app-usuario>
+
+        <div class="detail__page">
+            <app-fechas [fechaconsulta]="fechaconsulta"></app-fechas>
+            <h3>Detalle de resoluciones</h3>          
+
+            <div class="table__regimen d-movil">
+                @for (resolucion of resoluciones; track $index) {
+                    <div class="card mb-4">
+                        <div class="card-header my-card-header">
+                            {{resolucion.DeSubtDocu}}
+                        </div>
+                        <div class="card-body">
+                            <h5 class="card-title">Resolución N°</h5>
+                            <p class="card-text">{{resolucion.CoDocu}}</p>
+                            <a href="#" class="btn btn-descargar" (click)="imprimir(resolucion);">Descargar</a>
+                        </div>
+                    </div>
+                }
+            </div>
+
+            <div class="d-desktop">
+
+                    <table class="table-app">
+                        <thead>
+                            <tr>
+                                <td>Tipo Resolución</td>
+                                <td>Resolución N°</td>
+                                <td>Descargar</td>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @for (resolucion of resoluciones; track $index) {
+                                <tr>
+                                    <td>{{resolucion.DeSubtDocu}}</td>
+                                    <td>{{resolucion.CoDocu}}</td>
+                                    <td style="text-align: center; vertical-align: middle;"><img (click)="imprimir(resolucion);"
+                                        src="~/../assets/images/icon-download.svg" alt="download" /></td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+            </div>
+        </div>
+        }
+    </div>
+</div>

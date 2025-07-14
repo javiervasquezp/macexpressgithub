@@ -1,0 +1,51 @@
+<div class="main__right">
+    <h2 ><img loading="lazy" src="~/../assets/images/icon-doc.svg" alt="icon doc" > {{applicationConstants.Titulos.VerAportes}}</h2>
+    <app-alerta *ngIf="warning.length > 0" [msg]="warning"></app-alerta>
+    <div  class="detail">
+            <div class="row form-row no-gutters">
+                <div class="col-lg-4 col-md-4 form__right">
+                    <b style="color: var(--second-color);" >Tipo Documento</b>
+                    <select  id="slc-tipodocumento"  class="form-control rounded-pill ng-pristine ng-valid ng-touched" 
+                        [(ngModel)]="idTipoDocumento" (change)="tipoDocSelectChange()" 
+                        [disabled]="consultaExitosa">
+                        <option value="0">Seleccione</option>
+                        @for (tipoDocumento of tiposDocumentoIdentidad; track $index) {
+                        <option value="{{tipoDocumento.IdTipoDocumento}}">{{tipoDocumento.DescripcionTipoDocumento}}</option>
+                        }
+                    </select>
+                </div>
+                <div class="col-lg-4 col-md-4 ">
+                    <b >Número de Documento</b>
+                    <input [(ngModel)] = "numeroDocumento"  id="txt-numero" type="text" 
+                        (keypress)="dniNumberOnly($event)" class="form-control rounded-pill"   
+                        [disabled]="idTipoDocumento == '0' || consultaExitosa" [maxlength]="coreConstante.TipoDocumentoLenght.Otro"/>
+                </div>
+                <div class="col-lg-4 col-md-4">
+                    <b >&nbsp; </b>
+                    <div class="info__print info__print_search"   >
+                        @if(!consultaExitosa){
+                            <button (click)="generarReporte()" class="bton bton-second"><img
+                                src="~/../assets/images/lupa-buscador.svg"
+                                class="print-desktop" alt="buscar"> <span>Buscar</span></button>
+                        }
+                        @else if(consultaExitosa){
+                            <a (click)="limpiar()" class="bton bton-second"><span>Nueva Busqueda</span></a>
+                        } 
+                    </div>
+                </div>
+            </div>
+
+        @if(nombreReporte.length > 0){
+            <div class="mt-5" (click)="descargarReporte()">
+                <a class="bton bton-second p-3"><b>Estado de Cuenta en línea</b></a>
+            </div>
+        }     
+
+        <div class="detail__page mt-5 fs-1">
+            <p>(Para visualizar este archivo debes contar con Acrobat Reader. Si no dispones de este, <span><a href="https://get.adobe.com/es/reader/" target="_blank">haga clic aquí</a></span>)</p>
+        </div>
+        <div class="detail__page">
+            <p>La información proporcionada es solo para fines de consulta, carece de valor legal.</p>
+        </div>
+    </div>
+</div>

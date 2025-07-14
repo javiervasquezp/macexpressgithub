@@ -1,0 +1,366 @@
+
+.form__left {
+    display: none;
+}
+
+.form__left a {
+    display: block;
+    text-align: center;
+    width: 85%;
+    font-size: 0.8rem;
+    color: var(--first-color);
+    text-decoration: underline;
+}
+
+.form__left a:hover {
+    color: var(--second-color);
+}
+
+.form__right {
+    color: var(--first-color);
+}
+
+.form__right a {
+    color: var(--first-color);
+}
+
+.form__right a:hover {
+    color: var(--second-color);
+}
+
+.form__right select,
+.form__right .input-dni,
+.form__right .input-clave {
+    color: var(--first-color);
+    font-size: var(--text-sm);
+    width: 70%;
+    margin-inline: auto;
+    margin-bottom: 0.8rem;
+}
+
+.input-clave:disabled {
+    background-color: var(--bs-secondary-bg) !important;
+    opacity: 1 !important;
+}
+
+.form__right select {
+    background: url(../../../../assets/images/arrow-down.png) no-repeat right;
+    -webkit-appearance: none;
+    background-position-x: 93%;
+    background-size: 12px;
+    padding-left: 0.9rem;
+}
+
+.form__right .input-dni,
+.form__right .input-clave,
+.form__right .captcha input {
+    border-left: 0;
+    border-top: 0;
+    border-right: 0;
+    outline: none;
+    border-radius: 0;
+    margin-bottom: 1.1rem;
+}
+
+.form__right input::placeholder,
+.form__right .input-login::placeholder,
+.form__right .input-clave::placeholder {
+    color: var(--first-color);
+}
+
+.form__right label {
+    font-weight: bold;
+}
+
+.form__right .input-clave {
+    background: var(--white-color);
+    text-align: center;
+}
+
+.form__right .bton-first {
+    width: 60%;
+}
+
+.form__right .form-control:focus {
+    border-color: var(--first-color);
+    -webkit-box-shadow: none;
+    box-shadow: none;
+}
+
+.keyboard {
+    display: grid;
+    grid-template-columns: repeat(4, 25%);
+    justify-items: center;
+}
+
+.keyboard input {
+    border: 1px solid var(--first-color);
+    color: var(--first-color);
+    background: #E6E6E6;
+    width: 69px;
+    height: 69px;
+    font-size: 2rem;
+    font-weight: 600;
+    border-radius: 0.7rem;
+    outline: none;
+    margin-top: 7px;
+}
+
+.keyboard .btn-keyboard-delete {
+    background: #E6E6E6 url(../../../../assets/images/keyboard/key-delete.svg);
+    background-size: 65%;
+}
+
+.keyboard .btn-keyboard-clear {
+    background: #E6E6E6 url(../../../../assets/images/keyboard/key-clear.svg);
+    background-size: 45%;
+}
+
+.keyboard .btn-keyboard-delete,
+.keyboard .btn-keyboard-clear {
+    background-position-x: center;
+    background-position-y: center;
+    background-repeat: no-repeat;
+}
+
+.keyboard--desktop {
+    display: none;
+}
+
+.captcha {
+    display: grid;
+    grid-template-columns: repeat(2, 50%);
+    justify-items: center;
+    margin: 1.3rem 0 1.8rem;
+}
+
+.captcha__left {
+    text-align: center;
+    width: 100%;
+}
+
+.captcha__left img {
+    width: 95%;
+    min-height: 37px;
+}
+
+.captcha__right {
+    padding-left: 0.4rem;
+}
+
+.captcha__right button {
+    width: 50%;
+}
+
+.captcha input {
+    color: var(--first-color);
+}
+
+.info-text {
+    font-size: var(--text-sm);
+}
+
+.info-text--underline {
+    text-decoration: underline;
+}
+
+.password {
+    display: grid;
+    grid-template-columns: repeat(2, 50%);
+    justify-items: center;
+    margin-top: 1.5rem;
+}
+
+.footer__login {
+    padding: 1rem 0 1.2rem;
+    text-align: center;
+    font-size: var(--text-sm);
+}
+
+.footer__login a {
+    color: var(--second-color);
+    text-decoration: none;
+}
+
+.footer__login a:hover {
+    text-decoration: underline;
+}
+
+.auth-box{
+    -webkit-box-shadow: 0px 10px 34px -15px rgba(0, 0, 0, 0.24);
+    -moz-box-shadow: 0px 10px 34px -15px rgba(0, 0, 0, 0.24);
+    box-shadow: 0px 10px 34px -15px rgba(0, 0, 0, 0.24);
+    border-radius: 0.65rem;
+    padding-bottom: 0.5rem;
+    padding-top: 0.3rem;
+}
+
+/* Responsive Web */
+@media screen and (min-width: 768px) {
+
+    .zone__login {
+        max-width: 760px;
+    }
+
+    .login__header {
+        padding: 3.2rem 2rem;
+    }
+    
+    .header__left .logo {
+        width: 11.5rem;
+    }
+    
+    .header__right label {
+        font-size: 1.5rem;
+    }
+
+    .form__right label {
+        font-size: 1.1rem;
+        text-align: left;
+        width: 64%;
+    }
+
+    .form__right select {
+        background-size: 13px;
+        width: 14rem;
+    }
+    
+    .form__right .input-dni,
+    .form__right .input-clave {
+        font-size: var(--text-md);
+        width: 64%;
+        margin-bottom: 1.5rem;
+        text-align: left;
+        padding-left: 0;
+    }
+
+    .keyboard {
+        grid-template-columns: repeat(6, auto);
+        padding: 0.5rem 0 1.5rem;
+    }
+    
+    .keyboard input {
+        font-size: 2.5rem;
+        margin-top: 9px;
+    }
+    
+    .keyboard--desktop {
+        display: grid;
+    }
+
+    .keyboard--movil {
+        display: none;
+    }
+
+    .captcha {
+        margin: 1.3rem 0 2.2rem;
+        padding: 0 2.8rem;
+    }
+
+    .captcha__left {
+        text-align: center;
+        width: 100%;
+    }
+    
+    .captcha__left img {
+        width: 95%;
+    }
+
+    .captcha input {
+        min-height: 43.28px;
+    }
+
+    .form__right .bton-first {
+        width: 80%;
+    }
+
+    .info-text {
+        font-size: var(--text-xs);
+    }
+
+}
+
+@media screen and (min-width: 1224px) {
+
+    .zone__login {
+        max-width: 960px;
+    }
+
+    .login__header {
+        padding: 6rem 0 1.5rem;
+    }
+
+    .form__left,
+    .form__right {
+        display: block;
+        width: 50%;
+        text-align: left;
+    }
+
+    .form__left img {
+        width: 85%;
+    }
+
+    .form__right {
+        background: yellows;
+        padding-right: 3rem;
+    }
+
+    .form__right select,
+    .form__right .input-dni,
+    .form__right .input-clave {
+        font-size: var(--text-md);
+        width: 100%;
+        margin: 0 0 1.2rem;
+    }
+
+    .form__right select {
+        width: 16rem;
+        margin-bottom: 1.2rem;
+    }
+
+    .form__right input::placeholder,
+    .form__right .input-login::placeholder,
+    .form__right .input-clave::placeholder {
+        font-size: var(--text-md);
+    }
+
+    .keyboard {
+        padding: 0.5rem 0;
+        margin-right: 8.6rem;
+    }
+
+    .keyboard input {
+        width: 32px;
+        height: 32px;
+        font-size: inherit;
+        font-weight: 400;
+        border-radius: 0.3rem;
+        margin-top: 4px;
+    }
+
+    .captcha {
+        margin-bottom: 1.5rem;
+        padding: 0;
+    }
+    
+    .captcha__left img {
+        width: 94%;
+    }
+
+    .captcha input {
+        min-height: 40.8px;
+    }
+
+    .form__right .bton-first {
+        width: 100%;
+    }
+
+    .footer__login {
+        padding: 1.5rem 0 3rem;
+    }
+
+    .link-clave{
+        cursor: pointer;
+    }
+}

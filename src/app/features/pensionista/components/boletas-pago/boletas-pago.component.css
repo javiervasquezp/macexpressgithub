@@ -1,0 +1,102 @@
+.table-app {
+    width: 95%;
+    margin-top: 0.7rem;
+    margin-bottom: 0.7rem;   
+    font-size: var(--text-sm);
+}
+
+.table-app thead {
+    background-color: var(--fourth-color);
+    border: 1px solid;
+    border-color: var(--fourth-color);
+}
+
+.table-app thead tr{    
+    color: var(--white-color);
+    text-align: center !important;
+    vertical-align: middle !important;
+}
+
+.table-app thead  th {    
+    padding: 0rem 0.3rem 0rem 0.3rem;
+    font-weight: 500;
+}
+
+.table-app tbody {    
+    color: var(--second-color);
+}
+
+.table-app tbody tr {    
+    background-color: var(--fifth-color) !important;
+}
+
+.table-app tbody td {    
+    color: var(--second-color);
+    border: 1px solid;
+    border-color: var(--fourth-color);
+    padding: 0.3rem 0.3rem 0.3rem 0.3rem;
+    font-size: 0.8rem !important;
+}
+
+.table-app tbody td img {    
+    cursor:pointer; width: 0.85rem;
+}
+
+.table-app tbody tr:nth-child(even) {    
+    background-color: var(--white-color) !important;
+}
+
+.my-card-header{
+    background-color: var(--fourth-color);
+    color: var(--white-color);
+}
+
+.btn-descargar{
+    background-color: var(--second-color);
+    color: var(--white-color);
+}
+
+.btn-descargar :hover{
+    background-color: var(--third-color) !important;    
+}
+
+.table .title-column{
+    padding: .6rem 1rem;
+    margin-bottom: .1rem;
+    background: var(--first-color);
+    color: white;
+    width:50%;
+    text-transform: uppercase;
+}
+
+.table .table__items_td{
+    padding: .6rem .5rem .6rem .8rem;
+    margin-bottom: .1rem;
+    background: #e2ebed;
+    border-top: 2px solid #ffffff;
+    border-left: 2px solid #fff;  
+
+}
+
+.d-movil {
+    display: block;
+}
+
+.d-desktop {
+    display: none;
+}
+
+.text-md {
+    font-size: 1.2rem;
+}
+
+@media screen and (min-width: 768px) {
+
+    .d-movil {
+        display: none;
+    }
+    
+    .d-desktop {
+        display: block;
+    }
+}

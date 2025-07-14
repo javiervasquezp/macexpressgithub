@@ -1,0 +1,16 @@
+<div class="detail__user">
+    <div class="user__info">
+        <img loading="lazy" src="~/../../../../../assets/images/icon-user.svg" alt="user">
+        <div>            
+            <p>{{nombreCompleto}}</p>
+            <p>{{tipoDocumento}}: {{numeroDocumento}}</p>
+        </div>
+    </div>
+
+    @if(mostrarImprimir){
+        <div class="info__print" (click)="onClickHandler()" >
+            <img loading="lazy" src="~/../../../../../assets/images/icon-printer-movil.svg" class="print-movil" alt="imprimir">
+            <a  class="bton bton-second"><img loading="lazy" src="~/../../../../../assets/images/icon-print-outline.svg" class="print-desktop" alt="imprimir"> Imprimir</a>
+        </div>
+    }
+</div>

@@ -1,0 +1,564 @@
+<div class="main__right">
+    <h2>
+        <div class="container w-100" style="vertical-align: text-bottom;">
+            <div class="row">
+                <div class="col-9 " style="padding-bottom: 0;">
+                    <img loading="lazy" [src]="imagenAportes" width="25px" height="25px" alt="icon"><span
+                        style="vertical-align: bottom;">Aportes facultativos a pagar</span>
+                </div>
+                <div class="col-3">
+
+                </div>
+            </div>
+        </div>
+    </h2>
+    <div class="detail">
+        <app-alerta *ngIf="warning.length > 0" [msg]="warning"></app-alerta>
+        <div class="detail-page">
+            <div class="row form-row no-gutters">
+                <div class="col-lg-4 col-md-4 form__right">
+                    <b style="color: var(--second-color);" >Tipo Documento</b>
+                    <select  id="slc-tipodocumento"  class="form-control rounded-pill ng-pristine ng-valid ng-touched" 
+                        [(ngModel)]="idTipoDocumento" (change)="tipoDocSelectChange()" 
+                        [disabled]="consultaExitosa">
+                        <option value="0">Seleccione</option>
+                        @for (tipoDocumento of tiposDocumentoIdentidad; track $index) {
+                        <option value="{{tipoDocumento.IdTipoDocumento}}">{{tipoDocumento.DescripcionTipoDocumento}}</option>
+                        }
+                    </select>
+                </div>
+                <div class="col-lg-4 col-md-4 ">
+                    <b>Número de Documento</b>
+                    <input id="txt-numero" type="text" class="form-control rounded-pill" [(ngModel)]="numeroDocumento"
+                        [disabled]="idTipoDocumento == '0' || consultaExitosa" />
+                </div>
+                <div class="col-lg-4 col-md-4">
+                    <b>&nbsp; </b>
+                    <div class="info__print info__print_search">
+                        @if(!consultaExitosa){
+                        <a (click)="verAportesObligatorios()" class="bton bton-second"><img
+                                src="~/../assets/images/lupa-buscador.svg" class="print-desktop" alt="buscar">
+                            <span>Buscar</span></a>
+                        }
+                        @else{
+                            <a (click)="limpiar()" class="bton bton-second"><span>Nueva busqueda</span></a>
+                        }
+                    </div>
+                </div>
+            </div>
+            <div class="row form-row no-gutters" *ngIf="nombreAfiliado">
+                <div class="col-lg-2 col-md-2 col-12">
+                    <b style="color: black;">Afiliada/o:</b>
+                </div>
+                <div class="col-lg-8 col-md-8 col-12">
+                    {{nombreAfiliado}}
+                </div>
+            </div>
+            <div class="modal-content2 zona__popup2">
+                <div class="row">
+                    <div class="col-12">
+                        <ul class="nav nav-pills nav-justified nav-tabs" id="myTab" role="tablist">
+                            <li class="nav-item" role="presentation" style="border-top-left-radius: 1rem;">
+                                <a #myTabAO class="nav-link active" id="aportesObligatotios-tab" data-toggle="tab"
+                                    role="tab" (click)="verAportesObligatorios()" aria-controls="aportesObligatotios"
+                                    aria-selected="true"
+                                    style="height: 100%;border-top-left-radius: 0.7rem;"><strong>Aportes
+                                        Facultativos</strong></a>
+                            </li>
+
+                            <li class="nav-item" role="presentation">
+                                <a #myTabAA class="nav-link" id="aportesAdicionales-tab"
+                                    (click)="verAportesAdicionales()"
+                                    style="cursor: pointer;border-top-right-radius: 0.7rem;"><strong>Aportes
+                                        Facultativos Adicionales</strong></a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="modal-body">
+                    <div class="tab-content pt-4" id="myTabContent">
+                        <!--PRIMER TAB-->
+                        <div #aportesObligatotios class="tab-pane fade show active" id="aportesObligatotios"
+                            role="tabpanel" aria-labelledby="aportesObligatotios-tab">
+                            <div *ngIf="listaAportesObligatorioMostrar.length > 0 else noDatosAporteObligatorio">
+                                <ul>
+                                    <li style="margin-right: 2rem;text-align: justify;">Recuerda que primero debes
+                                        cancelar el saldo de los periodos con pagos parciales para completar la unidad
+                                        de aporte (UdA), ya que para el cálculo de tu pensión contabilizamos el número
+                                        de unidades de aporte realizados.</li>
+                                    <li style="list-style:none;margin-bottom: 10px;"></li>
+                                    <li style="list-style:none">
+                                        <div class='my-legend'>
+                                            <div class='legend-title'>Leyenda</div>
+                                            <div class='legend-scale'>
+                                                <ul class='legend-labels'>
+                                                    <li><span class="color1"></span>Periodo habilitado</li>
+                                                    <li><span class="color3"></span>Periodo con pago parcial</li>
+                                                    <li><span class="color2"></span>Periodo bloqueado hasta completar
+                                                        los pagos parciales</li>
+                                                    <li><span class="color4"></span>Periodo bloqueado por encontrarse en
+                                                        proceso de pago</li>
+                                                </ul>
+                                            </div>
+                                            <div class='legend-source'></div>
+                                        </div>
+                                    </li>
+                                </ul>
+
+                                <!--Grilla Desktop-->
+                                <div class="table__desktop d-desktop" style="min-height: 400px;">
+                                    <!--Primera Grilla-->
+                                    <table class="table" style="text-align: center;font-size: 12px;">
+                                        <caption></caption>
+                                        <thead>
+                                            <tr>
+                                                <th scope="col"
+                                                    style="background-color: #6f9ba4;color: white;border: 2px solid white;width: 12%;vertical-align: middle;">
+                                                    Periodo</th>
+                                                <th scope="col"
+                                                    style="background-color: #6f9ba4;color: white;border: 2px solid white;vertical-align: middle;width: 12%;">
+                                                    Aporte del Periodo</th>
+                                                <th scope="col"
+                                                    style="background-color: #6f9ba4;color: white;border: 2px solid white;vertical-align: middle;width: 11%;">
+                                                    Saldo de aporte <br> [a]</th>
+                                                <th scope="col"
+                                                    style="background-color: #6f9ba4;color: white;border: 2px solid white;width: 11%;vertical-align: middle;">
+                                                    Recargo por mora <br> [b]</th>
+                                                <th scope="col"
+                                                    style="background-color: #6f9ba4;color: white;border: 2px solid white;width: 14%;vertical-align: middle;">
+                                                    Total <br> [c] = [a] + [b]</th>
+                                                <th scope="col"
+                                                    style="background-color: #6f9ba4;color: white;border: 2px solid white;width: 21%;vertical-align: middle;">
+                                                    Monto a pagar en la SUNAT <br> Monto [c] redondeado</th>
+                                                <th scope="col"
+                                                    style="background-color: white;border: 2px solid white;">
+                                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
+                                                <th scope="col"
+                                                    style="background-color: #6f9ba4;color: white;border: 2px solid white;vertical-align: middle;">
+                                                    Monto a pagar(*)</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr *ngFor="let aporte of listaAportesObligatorioMostrar"
+                                                style="border-bottom: 2px solid #909088;">
+                                                <td [ngClass]="{'color1': aporte.indEstadoPago === '4', 'color2': aporte.indEstadoPago === '0', 'color3': aporte.indEstadoPago === '1', 'color4': aporte.indEstadoPago === '3'}"
+                                                    style="border-left: 2px solid white;border-right: 2px solid white;">
+                                                    <input type="checkbox" name="principal" [(ngModel)]="aporte.checked"
+                                                        disabled>
+                                                    <strong>&nbsp;&nbsp;{{aporte.periodoAportacion}}</strong>
+                                                </td>
+                                                <td
+                                                    style="background-color: #FAFAFA;border: 0;text-align: right;font-size: 14px;border-left: 2px solid white;border-right: 2px solid white;">
+                                                    {{aporte.aportePeriodo}}</td>
+                                                <td
+                                                    style="background-color: #FAFAFA;border: 0;text-align: right;font-size: 14px;border-left: 2px solid white;border-right: 2px solid white;">
+                                                    {{aporte.saldoAporte}}</td>
+                                                <td
+                                                    style="background-color: #FAFAFA;border: 0;text-align: right;font-size: 14px;border-left: 2px solid white;border-right: 2px solid white;">
+                                                    {{aporte.recargoMora}}</td>
+                                                <td
+                                                    style="background-color: #FAFAFA;border: 0;text-align: right;font-size: 14px;border-left: 2px solid white;border-right: 2px solid white;">
+                                                    {{aporte.totalPagar}}</td>
+                                                <td
+                                                    style="background-color: #FAFAFA;border: 0;text-align: right;font-size: 14px;border-left: 2px solid white;border-right: 2px solid white;">
+                                                    {{aporte.totalPagarSunat}}</td>
+                                                <td
+                                                    style="border: 0;text-align: right;font-weight: bold;font-size: 14px;">
+                                                    S/</td>
+                                                <td
+                                                    style="background-color: #FAFAFA;border: 0;border-left: 2px solid white;border-right: 2px solid white;">
+                                                    <div *ngIf="activaInputAporteO==aporte.periodoAportacion || aporte.checked"
+                                                        class="text-left">
+                                                        <div style="width: 100%;position: relative;">
+                                                            <input type="text" maxlength=9
+                                                                style="position: absolute;width:100%;"
+                                                                value='{{aporte.montoPagoDecla}}' disabled />
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                    <!--Fin Grilla Primera-->
+                                    <!--Fin Segunda Grilla-->
+                                </div>
+                                <!--Fin Grilla Desktop-->
+                            </div>
+                            <ng-template #noDatosAporteObligatorio>
+                                <div>No se encontraron periodos facultativos pendientes de pago.</div>
+                            </ng-template>
+
+                            <!--Grilla Mobile-->
+                            <div class="table__regimen d-movil">
+                                <div class="detail__row text-center" style="grid-template-columns: none;">
+                                    <ng-container>
+                                        <table class="table" style="margin: auto;margin-bottom: 1rem;"
+                                            *ngFor="let aporte of listaAportesObligatorioMostrar; let i = index">
+                                            <caption></caption>
+                                            <tr *ngIf="i % 2 == 0">
+                                                <th style="background-color: #6f9ba4;color: white;border: 2px solid white;"
+                                                    id="celular">Periodo</th>
+                                                <td style="background-color: white;border: 2px solid white;"></td>
+                                                <td *ngIf="i + 1 <= listaAportesObligatorioMostrar.length"
+                                                    class="table__items_td"
+                                                    [ngClass]="{'color1': listaAportesObligatorioMostrar[i].indEstadoPago === '4', 'color2': listaAportesObligatorioMostrar[i].indEstadoPago === '0', 'color3': listaAportesObligatorioMostrar[i].indEstadoPago === '1', 'color4': listaAportesObligatorioMostrar[i].indEstadoPago === '3'}"
+                                                    style="vertical-align: middle;">
+                                                    <input type="checkbox" name="principal"
+                                                        [(ngModel)]="listaAportesObligatorioMostrar[i].checked"
+                                                        disabled>
+                                                    <strong>&nbsp;&nbsp;{{listaAportesObligatorioMostrar[i].periodoAportacion}}
+                                                    </strong>
+                                                </td>
+                                                <td *ngIf="i + 2 <= listaAportesObligatorioMostrar.length"
+                                                    class="table__items_td"
+                                                    [ngClass]="{'color1': listaAportesObligatorioMostrar[i+1].indEstadoPago === '4', 'color2': listaAportesObligatorioMostrar[i+1].indEstadoPago === '0', 'color3': listaAportesObligatorioMostrar[i+1].indEstadoPago === '1', 'color4': listaAportesObligatorioMostrar[i+1].indEstadoPago === '3'}"
+                                                    style="vertical-align: middle;">
+                                                    <input type="checkbox" name="principal"
+                                                        [(ngModel)]="listaAportesObligatorioMostrar[i+1].checked"
+                                                        disabled>
+                                                    <strong>&nbsp;&nbsp;{{listaAportesObligatorioMostrar[i +
+                                                        1].periodoAportacion}} </strong>
+                                                </td>
+                                            </tr>
+                                            <tr *ngIf="i % 2 == 0">
+                                                <th style="background-color: #6f9ba4;color: white;border: 2px solid white;"
+                                                    id="celular">Aporte del Periodo</th>
+                                                <td
+                                                    style="background-color: #FAFAFA;border: 2px solid white;vertical-align: middle;">
+                                                    S/</td>
+                                                <td *ngIf="i + 1 <= listaAportesObligatorioMostrar.length"
+                                                    class="table__items_td" style="vertical-align: middle;">
+                                                    <strong>&nbsp;&nbsp;{{listaAportesObligatorioMostrar[i].aportePeriodo}}
+                                                    </strong>
+                                                </td>
+                                                <td *ngIf="i + 2 <= listaAportesObligatorioMostrar.length"
+                                                    class="table__items_td" style="vertical-align: middle;">
+                                                    <strong>&nbsp;&nbsp;{{listaAportesObligatorioMostrar[i +
+                                                        1].aportePeriodo}} </strong>
+                                                </td>
+                                            </tr>
+                                            <tr *ngIf="i % 2 == 0">
+                                                <th style="background-color: #6f9ba4;color: white;border: 2px solid white;"
+                                                    id="celular">Saldo de aporte <br> [a]</th>
+                                                <td
+                                                    style="background-color: #FAFAFA;border: 2px solid white;vertical-align: middle;">
+                                                    S/</td>
+                                                <td *ngIf="i + 1 <= listaAportesObligatorioMostrar.length"
+                                                    class="table__items_td" style="vertical-align: middle;">
+                                                    <strong>&nbsp;&nbsp;{{listaAportesObligatorioMostrar[i].saldoAporte}}
+                                                    </strong>
+                                                </td>
+                                                <td *ngIf="i + 2 <= listaAportesObligatorioMostrar.length"
+                                                    class="table__items_td" style="vertical-align: middle;">
+                                                    <strong>&nbsp;&nbsp;{{listaAportesObligatorioMostrar[i +
+                                                        1].saldoAporte}} </strong>
+                                                </td>
+                                            </tr>
+                                            <tr *ngIf="i % 2 == 0">
+                                                <th style="background-color: #6f9ba4;color: white;border: 2px solid white;"
+                                                    id="celular">Recargo por mora <br> [b]</th>
+                                                <td
+                                                    style="background-color: #FAFAFA;border: 2px solid white;vertical-align: middle;">
+                                                    S/</td>
+                                                <td *ngIf="i + 1 <= listaAportesObligatorioMostrar.length"
+                                                    class="table__items_td" style="vertical-align: middle;">
+                                                    <strong>&nbsp;&nbsp;{{listaAportesObligatorioMostrar[i].recargoMora}}
+                                                    </strong>
+                                                </td>
+                                                <td *ngIf="i + 2 <= listaAportesObligatorioMostrar.length"
+                                                    class="table__items_td" style="vertical-align: middle;">
+                                                    <strong>&nbsp;&nbsp;{{listaAportesObligatorioMostrar[i +
+                                                        1].recargoMora}} </strong>
+                                                </td>
+                                            </tr>
+                                            <tr *ngIf="i % 2 == 0">
+                                                <th style="background-color: #6f9ba4;color: white;border: 2px solid white;"
+                                                    id="celular">Total <br> [c] = [a] + [b]</th>
+                                                <td
+                                                    style="background-color: #FAFAFA;border: 2px solid white;vertical-align: middle;">
+                                                    S/</td>
+                                                <td *ngIf="i + 1 <= listaAportesObligatorioMostrar.length"
+                                                    class="table__items_td" style="vertical-align: middle;">
+                                                    <strong>&nbsp;&nbsp;{{listaAportesObligatorioMostrar[i].totalPagar}}
+                                                    </strong>
+                                                </td>
+                                                <td *ngIf="i + 2 <= listaAportesObligatorioMostrar.length"
+                                                    class="table__items_td" style="vertical-align: middle;">
+                                                    <strong>&nbsp;&nbsp;{{listaAportesObligatorioMostrar[i +
+                                                        1].totalPagar}} </strong>
+                                                </td>
+                                            </tr>
+                                            <tr *ngIf="i % 2 == 0">
+                                                <th style="background-color: #6f9ba4;color: white;border: 2px solid white;"
+                                                    id="celular">Monto a pagar en la SUNAT <br> Monto [c] redondeado
+                                                </th>
+                                                <td
+                                                    style="background-color: #FAFAFA;border: 2px solid white;vertical-align: middle;">
+                                                    S/</td>
+                                                <td *ngIf="i + 1 <= listaAportesObligatorioMostrar.length"
+                                                    class="table__items_td" style="vertical-align: middle;">
+                                                    <strong>&nbsp;&nbsp;{{listaAportesObligatorioMostrar[i].totalPagarSunat}}
+                                                    </strong>
+                                                </td>
+                                                <td *ngIf="i + 2 <= listaAportesObligatorioMostrar.length"
+                                                    class="table__items_td" style="vertical-align: middle;">
+                                                    <strong>&nbsp;&nbsp;{{listaAportesObligatorioMostrar[i +
+                                                        1].totalPagarSunat}} </strong>
+                                                </td>
+                                            </tr>
+                                            <tr *ngIf="i % 2 == 0" style="height: 10px;">
+                                            </tr>
+                                            <tr *ngIf="i % 2 == 0">
+                                                <th
+                                                    style="background-color: #6f9ba4;color: white;border: 2px solid white;">
+                                                    Monto a pagar(*)</th>
+                                                <td
+                                                    style="background-color: #FAFAFA;border: 2px solid white;vertical-align: middle;">
+                                                    S/</td>
+
+                                                <td *ngIf="i + 1 <= listaAportesObligatorioMostrar.length"
+                                                    class="table__items_td text-left">
+                                                    <div
+                                                        *ngIf="activaInputAporteO==listaAportesObligatorioMostrar[i].periodoAportacion || listaAportesObligatorioMostrar[i].checked">
+                                                        <div style="width: 100%;position: relative;">
+                                                            <input type="text" disabled currencyMask maxlength=9
+                                                                value='{{listaAportesObligatorioMostrar[i].montoPagoDecla}}'
+                                                                style="width: 100%;position: absolute;" />
+                                                        </div>
+                                                    </div>
+                                                </td>
+
+                                                <td *ngIf="i + 2 <= listaAportesObligatorioMostrar.length"
+                                                    class="table__items_td text-left">
+                                                    <div
+                                                        *ngIf="activaInputAporteO==listaAportesObligatorioMostrar[i+1].periodoAportacion || listaAportesObligatorioMostrar[i+1].checked">
+                                                        <div style="width: 100%;position: relative;">
+                                                            <input type="text" disabled currencyMask maxlength=9
+                                                                value='{{listaAportesObligatorioMostrar[i+1].montoPagoDecla}}'
+                                                                style="width: 100%;position: absolute;" />
+                                                        </div>
+                                                    </div>
+                                                </td>
+
+                                            </tr>
+                                        </table>
+                                    </ng-container>
+                                </div>
+                            </div>
+                            <!--Fin Grilla Mobile-->
+
+                            <div class="text-right ml-3 mt-1"><span style="color: #8e9089; font-size: 12px">(*) Puedes
+                                    realizar el
+                                    pago total o parcial.</span></div>
+
+                            <!--Paginado-->
+                            <nav style="border-top: 1px solid #6f9ba4; margin-top: 1rem; padding-top: 1rem;"
+                                aria-label="desktop">
+                                <ul class="pagination justify-content-end"
+                                    style="font-size: 1rem; justify-content: center !important;">
+                                    <pagination [boundaryLinks]="true" [totalItems]="totalRegistros" [maxSize]="3"
+                                        (pageChanged)="pageChanged($event)" [itemsPerPage]="itemsPorPagina"
+                                        [customFirstTemplate]="firstTemplate" [customLastTemplate]="lastTemplate"
+                                        [customPreviousTemplate]="prevTemplate" [customNextTemplate]="nextTemplate">
+                                    </pagination>
+                                    <ng-template #prevTemplate let-disabled="disabled" let-currentPage="currentPage">
+                                        <img loading="lazy" [src]="imagenPageAfter" alt="ini" class="page_img_small"
+                                            [ngClass]="{ 'page_img_disenable':disabled }">
+                                    </ng-template>
+                                    <ng-template #nextTemplate let-disabled="disabled" let-currentPage="currentPage">
+                                        <img loading="lazy" [src]="imagenPageNext" alt="ini" class="page_img_small"
+                                            [ngClass]="{ 'page_img_disenable':disabled }">
+                                    </ng-template>
+                                    <ng-template #lastTemplate let-disabled="disabled" let-currentPage="currentPage">
+                                        <img loading="lazy" [src]="imagenPageFin" alt="ini" class="page_img"
+                                            [ngClass]="{ 'page_img_disenable':disabled }">
+                                    </ng-template>
+                                    <ng-template #firstTemplate let-disabled="disabled" let-currentPage="currentPage">
+                                        <img loading="lazy" [src]="imagenPageIni" alt="ini" class="page_img"
+                                            [ngClass]="{ 'page_img_disenable':disabled }">
+                                    </ng-template>
+                                </ul>
+                            </nav>
+                            <!--fin Paginado-->
+                            <!--Botones-->
+                            <div class="modal-footer justify-content-center w-75" style="margin: auto;">
+                                <!-- <button type="button" class="bton bton-second col-sm-12 col-md-3 mt-md-0" style="padding: 0.4rem 1.4rem;" (click)="limpiar(0)">Limpiar</button> -->
+                                <button type="button" class="bton bton-second mt-sm-3 col-sm-12 col-md-3 mt-md-0"
+                                    style="padding: 0.4rem 1.4rem;" data-toggle="tab" role="tab"
+                                    aria-controls="aportesAdicionales" aria-selected="false"
+                                    (click)="siguiente()">Siguiente</button>
+                            </div>
+                            <!--Fin Botones-->
+                        </div>
+                        <!--FIN PRIMER TAB-->
+                        <!--SEGUNDO TAB-->
+                        <div #aportesAdicionales class="tab-pane fade" id="aportesAdicionales" role="tabpanel"
+                            aria-labelledby="aportesAdicionales-tab">
+
+                            <ul>
+                                <li style="list-style:none;margin-bottom: 10px;"></li>
+                                <li style="list-style:none">
+                                    <div class='my-legend'>
+                                        <div class='legend-title'>Leyenda</div>
+                                        <div class='legend-scale'>
+                                            <ul class='legend-labels'>
+                                                <li><span class="color4"></span>Periodos bloqueados por Declaración de
+                                                    pago en proceso.</li>
+                                            </ul>
+                                        </div>
+                                        <div class='legend-source'></div>
+                                    </div>
+                                </li>
+                            </ul>
+                            <!--Grilla Desktop-->
+                            <div *ngIf="listaAportesAdicionalesMostrar.length > 0 else noDatosAporteAdicionales">
+                                <div class="table__desktop d-desktop">
+                                    <div style="justify-content: center; display: flex">
+                                        <div class="p-3" style="width: 50%;">
+                                            <table class="table" style="text-align: center;font-size: 12px;">
+                                                <caption></caption>
+                                                <thead>
+                                                    <tr>
+                                                        <th scope="col"
+                                                            style="background-color: #6f9ba4;color: white;border: 2px solid white;width: 10%;">
+                                                            Periodo</th>
+                                                        <th scope="col"
+                                                            style="background-color: white;border: 2px solid white;width: 0%;">
+                                                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
+                                                        <th scope="col"
+                                                            style="background-color: #6f9ba4;color: white;border: 2px solid white;width: 20%;">
+                                                            Monto a Pagar</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr *ngFor="let aporte of listaAportesAdicionalesMostrar"
+                                                        style="border-bottom: 2px solid #909088;">
+                                                        <td style="border: 0;border-left: 2px solid white;border-right: 2px solid white;"
+                                                            [ngClass]="{'color4': aporte.indEstadoPago === '3', 'color-neutral': aporte.indEstadoPago !== '3'}">
+                                                            <input type="checkbox" name="principal"
+                                                                [(ngModel)]="aporte.checked" disabled>
+                                                            <strong>&nbsp;&nbsp;{{aporte.periodoAportacion}}</strong>
+                                                        </td>
+                                                        <td style="border: 0;text-align: right;font-weight: bold;">S/
+                                                        </td>
+                                                        <td
+                                                            style="background-color: #FAFAFA;border: 0;border-left: 2px solid white;border-right: 2px solid white;text-align: left;">
+                                                            <div style="width: 100%;position: relative;">
+                                                                <div
+                                                                    *ngIf="activaInputAporteA==aporte.periodoAportacion || aporte.checked">
+                                                                    <input type="text" maxlength=9
+                                                                        style="position: absolute;width:100%;"
+                                                                        value='{{aporte.montoPagoDecla}}' disabled />
+                                                                </div>
+                                                            </div>
+
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!--Fin Grilla Desktop-->
+                            <ng-template #noDatosAporteAdicionales>
+                                <div>No se encontraron periodos adicionales.</div>
+                            </ng-template>
+
+                            <!--Grilla Mobile-->
+                            <div *ngIf="listaAportesAdicionalesMostrar.length > 0">
+                                <div class="table__regimen d-movil">
+                                    <div class="detail__row" style="grid-template-columns: none;">
+                                        <ng-container>
+                                            <table class="table" style="margin: auto;width: 70%;">
+                                                <caption></caption>
+                                                <tr>
+                                                    <th id="celular"
+                                                        style="background-color: #6f9ba4;color: white;border: 2px solid white;width: 30%;text-align: center;">
+                                                        Periodo</th>
+                                                    <td
+                                                        style="background-color: white;border: 2px solid white;width: 10%;">
+                                                    </td>
+                                                    <th id="celular"
+                                                        style="background-color: #6f9ba4;color: white;border: 2px solid white;width: 40%;text-align: center;">
+                                                        Monto a Pagar</th>
+                                                </tr>
+                                                <tr *ngFor="let aporte of listaAportesAdicionalesMostrar">
+                                                    <td class="table__items_td"
+                                                        style="background-color: #E1EAEC;text-align: center;"
+                                                        [ngClass]="{'color4': aporte.indEstadoPago === '3'}">
+                                                        <input type="checkbox" name="principal"
+                                                            [(ngModel)]="aporte.checked" disabled>
+                                                        <strong>&nbsp;&nbsp;{{aporte.periodoAportacion}}</strong>
+                                                    </td>
+                                                    <td style="background-color: white;border: 2px solid white;">S/</td>
+                                                    <td
+                                                        style="background-color: #FAFAFA;border: 2px solid white;text-align: left;">
+                                                        <div style="width: 100%;position: relative;">
+                                                            <div
+                                                                *ngIf="activaInputAporteA==aporte.periodoAportacion || aporte.checked">
+                                                                <input type="text" maxlength=9
+                                                                    style="position: absolute;width:100%;"
+                                                                    value='{{aporte.montoPagoDecla}}' disabled />
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </ng-container>
+                                    </div>
+                                </div>
+                            </div>
+                            <!--Fin Grilla Mobile-->
+
+                            <!--Paginado-->
+                            <nav style="border-top: 1px solid #6f9ba4; margin-top: 1rem; padding-top: 1rem;"
+                                aria-label="movil">
+                                <ul class="pagination justify-content-end"
+                                    style="font-size: 1rem; justify-content: center !important;">
+                                    <pagination [boundaryLinks]="true" [totalItems]="totalRegistros" [maxSize]="3"
+                                        (pageChanged)="pageChanged($event)" [itemsPerPage]="itemsPorPagina"
+                                        [customFirstTemplate]="firstTemplate" [customLastTemplate]="lastTemplate"
+                                        [customPreviousTemplate]="prevTemplate" [customNextTemplate]="nextTemplate">
+                                    </pagination>
+                                    <ng-template #prevTemplate let-disabled="disabled" let-currentPage="currentPage">
+                                        <img loading="lazy" [src]="imagenPageAfter" alt="ini" class="page_img_small"
+                                            [ngClass]="{ 'page_img_disenable':disabled }">
+                                    </ng-template>
+                                    <ng-template #nextTemplate let-disabled="disabled" let-currentPage="currentPage">
+                                        <img loading="lazy" [src]="imagenPageNext" alt="ini" class="page_img_small"
+                                            [ngClass]="{ 'page_img_disenable':disabled }">
+                                    </ng-template>
+                                    <ng-template #lastTemplate let-disabled="disabled" let-currentPage="currentPage">
+                                        <img loading="lazy" [src]="imagenPageFin" alt="ini" class="page_img"
+                                            [ngClass]="{ 'page_img_disenable':disabled }">
+                                    </ng-template>
+                                    <ng-template #firstTemplate let-disabled="disabled" let-currentPage="currentPage">
+                                        <img loading="lazy" [src]="imagenPageIni" alt="ini" class="page_img"
+                                            [ngClass]="{ 'page_img_disenable':disabled }">
+                                    </ng-template>
+                                </ul>
+                            </nav>
+                            <!--fin Paginado-->
+                            <!--Botones-->
+                            <div class="modal-footer justify-content-center w-75" style="margin: auto;">
+                                <button type="button" class="bton bton-second col-sm-12 col-md-3 mt-md-0"
+                                    style="padding: 0.4rem 1.4rem;" (click)="retornar()">Volver</button>
+                                <!-- <button type="button" class="bton bton-second mt-sm-3 col-sm-12 col-md-3 mt-md-0" style="padding: 0.4rem 1.4rem;" (click)="limpiar(1)">Limpiar</button> -->
+                                <!-- <button type="button" class="bton bton-second mt-sm-3 col-sm-12 col-md-3 mt-md-0" style="padding: 0.4rem 1.4rem;"
+                    (click)="siguiente()">Siguiente</button> -->
+                            </div>
+                            <!--Fin Botones-->
+                        </div>
+                        <!--FIN SEGUNDO TAB-->
+                    </div>
+
+                </div>
+            </div>
+
+
+
+
+        </div>
+    </div>
+</div>

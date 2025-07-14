@@ -1,0 +1,23 @@
+<div class="modal" style="display:block;">
+  <div class="modal-dialog modal-dialog-centered popup__wrapper" role="document">
+    <div class="modal-content zona__popup">
+      <div class="modal-header">
+        <img style="width: 2rem;" src="~/../assets/images/icon-user.svg" alt="User">
+        <h5 style="margin-left: 1rem;" class="modal-title">Cerrar sesión</h5>
+      </div>
+      <div class="modal-body">
+        <div class="row mb-2">
+          <div class="col-12 text-center">
+            <p class="fw-bold">¿Estas seguro de cerrar tu sesión?</p>
+            <p>Esta acción puede tardar unos segundos.</p>
+          </div>
+        </div>
+        <div class="d-flex justify-content-evenly mb-5">
+          <div><a class="bton bton-first" (click)="bsModalRef.hide()">Cancelar</a></div>
+          <div><a class="bton bton-second" (click)="CerrarSesionClick()">Aceptar</a></div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>

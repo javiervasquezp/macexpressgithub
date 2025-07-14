@@ -1,0 +1,79 @@
+.table-app {
+    width: 95%;
+    margin-top: 0.7rem;
+    margin-bottom: 0.7rem;   
+    font-size: var(--text-sm);
+}
+
+.table-app thead {
+    background-color: var(--fourth-color);
+    border: 1px solid;
+    border-color: var(--fourth-color);
+}
+
+.table-app thead tr{    
+    color: var(--white-color);
+    text-align: center !important;
+    vertical-align: middle !important;
+}
+
+.table-app thead  td {    
+    padding: 0rem 0.3rem 0rem 0.3rem;
+    font-weight: 500;
+}
+
+.table-app tbody {    
+    color: var(--second-color);
+}
+
+.table-app tbody tr {    
+    background-color: var(--fifth-color) !important;
+}
+
+.table-app tbody td {    
+    color: var(--second-color);
+    border: 1px solid;
+    border-color: var(--fourth-color);
+    padding: 0.3rem 0.3rem 0.3rem 0.3rem;
+}
+
+.table-app tbody td img {    
+    cursor:pointer; width: 0.85rem;
+}
+
+.table-app tbody tr:nth-child(even) {    
+    background-color: var(--white-color) !important;
+}
+
+.my-card-header{
+    background-color: var(--fourth-color);
+    color: var(--white-color);
+}
+
+.btn-descargar{
+    background-color: var(--second-color);
+    color: var(--white-color);
+}
+
+.btn-descargar :hover{
+    background-color: var(--third-color) !important;    
+}
+
+.d-movil {
+    display: block;
+}
+
+.d-desktop {
+    display: none;
+}
+
+@media screen and (min-width: 768px) {
+
+    .d-movil {
+        display: none;
+    }
+    
+    .d-desktop {
+        display: block;
+    }
+}

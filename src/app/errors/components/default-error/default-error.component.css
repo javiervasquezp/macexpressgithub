@@ -1,0 +1,29 @@
+.mainbox {
+    background-color: transparent;
+    margin-top: 5rem;
+
+    position: relative;
+    text-align: center;
+
+}
+
+.erricon {
+    width: 10rem;
+    margin-bottom: 2rem;
+}
+
+.msg {
+    font-weight: bold;
+    font-size: 1.6rem;
+}
+
+a {
+    text-decoration: none;
+    width: 10rem;
+    margin-top: 1rem;
+    ;
+}
+
+a:hover {
+    text-decoration: none;
+}
