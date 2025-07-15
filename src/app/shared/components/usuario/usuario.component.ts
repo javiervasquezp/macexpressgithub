@@ -2,11 +2,10 @@ import { Component, EventEmitter, Input, OnInit, Output, inject } from '@angular
 import { UserService } from '@services/user.service';
 
 @Component({
-  selector: 'app-usuario',
-  standalone: true,
-  imports: [],
-  templateUrl: './usuario.component.html',
-  styleUrl: './usuario.component.css'
+    selector: 'app-usuario',
+    imports: [],
+    templateUrl: './usuario.component.html',
+    styleUrl: './usuario.component.css'
 })
 export class UsuarioComponent implements OnInit{
   @Input() mostrarImprimir: boolean = false;

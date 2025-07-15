@@ -14,16 +14,15 @@ import { TiposDocumentoIdentidad } from '@core/models/tipos.model';
 import { CatalogoService } from '@shared/services/catalogo.service';
 
 @Component({
-  selector: 'app-pago-facil-viewer',
-  standalone: true,
-  imports: [
-    CommonModule,
-    FormsModule,
-    AlertaComponent,
-    PaginationModule
-  ],
-  templateUrl: './pago-facil-viewer.component.html',
-  styleUrl: './pago-facil-viewer.component.scss'
+    selector: 'app-pago-facil-viewer',
+    imports: [
+        CommonModule,
+        FormsModule,
+        AlertaComponent,
+        PaginationModule
+    ],
+    templateUrl: './pago-facil-viewer.component.html',
+    styleUrl: './pago-facil-viewer.component.scss'
 })
 export class PagoFacilViewerComponent implements OnInit {
   numeroDocumento: string = "";

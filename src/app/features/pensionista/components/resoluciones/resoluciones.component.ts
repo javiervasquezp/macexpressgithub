@@ -15,17 +15,16 @@ import { CatalogoService } from '@shared/services/catalogo.service';
 import { AuthService } from 'app/auth/services/auth.service';
 
 @Component({
-  selector: 'app-resoluciones',
-  standalone: true,
-  imports: [
-    CommonModule,
-    AlertaComponent,
-    FormsModule,
-    UsuarioComponent,
-    FechasComponent
-  ],
-  templateUrl: './resoluciones.component.html',
-  styleUrl: './resoluciones.component.css'
+    selector: 'app-resoluciones',
+    imports: [
+        CommonModule,
+        AlertaComponent,
+        FormsModule,
+        UsuarioComponent,
+        FechasComponent
+    ],
+    templateUrl: './resoluciones.component.html',
+    styleUrl: './resoluciones.component.css'
 })
 export class ResolucionesComponent implements OnInit {
 

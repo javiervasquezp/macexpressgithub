@@ -6,11 +6,10 @@ import { BsModalRef } from 'ngx-bootstrap/modal';
 import { Subject } from 'rxjs';
 
 @Component({
-  selector: 'app-modal',
-  standalone: true,
-  imports: [],
-  templateUrl: './modal.component.html',
-  styleUrl: './modal.component.css'
+    selector: 'app-modal',
+    imports: [],
+    templateUrl: './modal.component.html',
+    styleUrl: './modal.component.css'
 })
 export class ModalComponent implements OnInit{
 

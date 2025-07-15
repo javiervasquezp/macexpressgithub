@@ -8,16 +8,15 @@ import { HeaderComponent } from '@shared/components/header/header.component';
 
 
 @Component({
-  selector: 'app-features',
-  standalone: true,
-  imports: [
-    RouterOutlet,
-    HeaderComponent, 
-    FooterComponent,
-    RouterLink
-  ],
-  templateUrl: './features.component.html',
-  styleUrl: './features.component.css'
+    selector: 'app-features',
+    imports: [
+        RouterOutlet,
+        HeaderComponent,
+        FooterComponent,
+        RouterLink
+    ],
+    templateUrl: './features.component.html',
+    styleUrl: './features.component.css'
 })
 export class FeaturesComponent implements OnInit{  
   private readonly userSvc = inject(UserService);

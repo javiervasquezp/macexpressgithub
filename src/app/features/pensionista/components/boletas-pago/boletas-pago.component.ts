@@ -16,7 +16,6 @@ import { AuthService } from 'app/auth/services/auth.service';
 
 @Component({
     selector: 'app-boletas-pago',
-    standalone: true,
     imports: [
         CommonModule,
         AlertaComponent,

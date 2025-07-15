@@ -15,14 +15,13 @@ import { ApplicationConstants } from '@shared/constants/application.constants';
 import { ToastrService } from 'ngx-toastr';
 
 @Component({
-  selector: 'app-login',
-  standalone: true,
-  imports: [
-    AlertaComponent,
-    FormsModule
-  ],
-  templateUrl: './login.component.html',
-  styleUrl: './login.component.css'
+    selector: 'app-login',
+    imports: [
+        AlertaComponent,
+        FormsModule
+    ],
+    templateUrl: './login.component.html',
+    styleUrl: './login.component.css'
 })
 export default class LoginComponent implements OnInit {
   warning: string = "";

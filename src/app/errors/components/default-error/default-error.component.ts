@@ -3,11 +3,10 @@ import { Router } from '@angular/router';
 import { CoreConstants } from '@core/constants/core.constant';
 
 @Component({
-  selector: 'app-default-error',
-  standalone: true,
-  imports: [],
-  templateUrl: './default-error.component.html',
-  styleUrl: './default-error.component.css'
+    selector: 'app-default-error',
+    imports: [],
+    templateUrl: './default-error.component.html',
+    styleUrl: './default-error.component.css'
 })
 export class DefaultErrorComponent {
 

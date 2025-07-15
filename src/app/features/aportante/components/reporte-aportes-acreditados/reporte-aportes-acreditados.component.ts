@@ -11,15 +11,14 @@ import { CatalogoService } from '@shared/services/catalogo.service';
 import { AuthService } from 'app/auth/services/auth.service';
 
 @Component({
-  selector: 'app-reporte-aportes-acreditados',
-  standalone: true,
-  imports: [
-    CommonModule,
-    AlertaComponent,
-    FormsModule
-  ],
-  templateUrl: './reporte-aportes-acreditados.component.html',
-  styleUrl: './reporte-aportes-acreditados.component.css'
+    selector: 'app-reporte-aportes-acreditados',
+    imports: [
+        CommonModule,
+        AlertaComponent,
+        FormsModule
+    ],
+    templateUrl: './reporte-aportes-acreditados.component.html',
+    styleUrl: './reporte-aportes-acreditados.component.css'
 })
 export class ReporteAportesAcreditadosComponent implements OnInit {
 
