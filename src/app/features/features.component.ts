@@ -1,5 +1,5 @@
 import { Component, OnInit, inject} from '@angular/core';
-import { Router, RouterLink, RouterOutlet } from '@angular/router';
+import { Router, RouterOutlet } from '@angular/router';
 import { CoreConstants } from '@core/constants/core.constant';
 import { Usuario } from '@core/models/usuario.model';
 import { UserService } from '@services/user.service';
@@ -12,8 +12,7 @@ import { HeaderComponent } from '@shared/components/header/header.component';
     imports: [
         RouterOutlet,
         HeaderComponent,
-        FooterComponent,
-        RouterLink
+        FooterComponent
     ],
     templateUrl: './features.component.html',
     styleUrl: './features.component.css'
