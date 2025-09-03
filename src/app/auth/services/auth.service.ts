@@ -1,5 +1,5 @@
 import { Injectable, inject } from '@angular/core';
-import { ClaveVirtualApiHpstConstants } from '@core/constants/seguridad-api.constant';
+import { ClaveVirtualApiHostConstants } from '@core/constants/seguridad-api.constant';
 import { CoreConstants } from '@core/constants/core.constant';
 import { LogIngRequest } from '@core/models/auth.modes';
 import { UserService } from '@services/user.service';
@@ -22,13 +22,13 @@ export class AuthService {
 
   public login(body : LogIngRequest): any {
     //debugger;
-    const url = ClaveVirtualApiHpstConstants.AuthUri.LoginMacExpress;
+    const url = ClaveVirtualApiHostConstants.AuthUri.LoginMacExpress;
     return this.apiService.post(this.endPoint, url,body).pipe(
       map((res: any) => {
         return res;
       }),
       catchError((err) => {
-        return throwError('Error inesperado en el servidor');
+        return throwError(() => new Error('Error inesperado en el servidor'));
       })
     );
   }

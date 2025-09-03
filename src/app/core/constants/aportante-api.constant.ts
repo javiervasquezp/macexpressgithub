@@ -1,7 +1,9 @@
-export module AportanteApiConstants {
+export namespace AportanteApiConstants {
     export const EstadoCuentaAportesUri = {
         EstadoCuentaAportes: '/EstadoCuentaAportes',
-        GetAporteAcreditados: '/EstadoCuentaAportes/GetAporteAcreditados'
+        PostAporteAcreditados: '/EstadoCuentaAportes/PostAporteAcreditados',
+        PostSendCorreoAporteAcreditados: '/EstadoCuentaAportes/PostSendCorreoAporteAcreditados',
+        PostObtenerDatosPersonalesReporteAcreditados: '/EstadoCuentaAportes/PostObtenerDatosPersonalesReporteAcreditados'
 
     };
 

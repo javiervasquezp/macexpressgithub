@@ -1,5 +1,5 @@
 import { Injectable, inject, runInInjectionContext, signal } from '@angular/core';
-import { ClaveVirtualApiHpstConstants } from '@core/constants/seguridad-api.constant';
+import { ClaveVirtualApiHostConstants } from '@core/constants/seguridad-api.constant';
 import { catchError, map } from 'rxjs/operators';
 import { throwError } from 'rxjs';
 import { TiposDocumentoIdentidad } from '@core/models/tipos.model';
@@ -20,7 +20,7 @@ export class CatalogoService {
   }
   public getTiposDocumentosIdentidad(): any {
     //debugger;
-    const url = ClaveVirtualApiHpstConstants.AuthUri.GetDocumentType;
+    const url = ClaveVirtualApiHostConstants.AuthUri.GetDocumentType;
     return this.apiService.get(this.endPoint, url,).pipe(
       map((res: any) => {
         return res;

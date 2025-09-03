@@ -1,51 +1,108 @@
 <div class="main__right">
-    <h2 ><img loading="lazy" src="~/../assets/images/icon-doc.svg" alt="icon doc" > {{applicationConstants.Titulos.VerAportes}}</h2>
+    <h2><img loading="lazy" src="~/../assets/images/icon-doc.svg" alt="icon doc">
+        {{applicationConstants.Titulos.VerAportes}}</h2>
     <app-alerta *ngIf="warning.length > 0" [msg]="warning"></app-alerta>
-    <div  class="detail">
-            <div class="row form-row no-gutters">
-                <div class="col-lg-4 col-md-4 form__right">
-                    <b style="color: var(--second-color);" >Tipo Documento</b>
-                    <select  id="slc-tipodocumento"  class="form-control rounded-pill ng-pristine ng-valid ng-touched" 
-                        [(ngModel)]="idTipoDocumento" (change)="tipoDocSelectChange()" 
-                        [disabled]="consultaExitosa">
-                        <option value="0">Seleccione</option>
-                        @for (tipoDocumento of tiposDocumentoIdentidad; track $index) {
-                        <option value="{{tipoDocumento.IdTipoDocumento}}">{{tipoDocumento.DescripcionTipoDocumento}}</option>
-                        }
-                    </select>
-                </div>
-                <div class="col-lg-4 col-md-4 ">
-                    <b >Número de Documento</b>
-                    <input [(ngModel)] = "numeroDocumento"  id="txt-numero" type="text" 
-                        (keypress)="dniNumberOnly($event)" class="form-control rounded-pill"   
-                        [disabled]="idTipoDocumento == '0' || consultaExitosa" [maxlength]="coreConstante.TipoDocumentoLenght.Otro"/>
-                </div>
-                <div class="col-lg-4 col-md-4">
-                    <b >&nbsp; </b>
-                    <div class="info__print info__print_search"   >
-                        @if(!consultaExitosa){
-                            <button (click)="generarReporte()" class="bton bton-second"><img
-                                src="~/../assets/images/lupa-buscador.svg"
-                                class="print-desktop" alt="buscar"> <span>Buscar</span></button>
-                        }
-                        @else if(consultaExitosa){
-                            <a (click)="limpiar()" class="bton bton-second"><span>Nueva Busqueda</span></a>
-                        } 
-                    </div>
+    <div class="detail">
+        <div class="row form-row no-gutters campos-busqueda">
+            <div class="col-lg-4 col-md-4 form__right">
+                <b style="color: var(--second-color);">Tipo Documento</b>
+                <select id="slc-tipodocumento" class="form-control rounded-pill ng-pristine ng-valid ng-touched"
+                    [(ngModel)]="idTipoDocumento" (change)="tipoDocSelectChange()" [disabled]="datosPersonales != null">
+                    <option value="0">Seleccione</option>
+                    @for (tipoDocumento of tiposDocumentoIdentidad; track $index) {
+                    <option value="{{tipoDocumento.IdTipoDocumento}}">{{tipoDocumento.DescripcionTipoDocumento}}
+                    </option>
+                    }
+                </select>
+            </div>
+            <div class="col-lg-4 col-md-4 ">
+                <b>Número de Documento</b>
+                <input [(ngModel)]="numeroDocumento" id="txt-numero" type="text" (keypress)="dniNumberOnly($event)"
+                    class="form-control rounded-pill" [disabled]="idTipoDocumento == '0' || datosPersonales != null"
+                    [maxlength]="coreConstante.TipoDocumentoLenght.Otro" />
+            </div>
+            <div class="col-lg-4 col-md-4">
+                <b>&nbsp; </b>
+                <div class="info__print info__print_search">
+                    @if(datosPersonales == null){
+                    <button (click)="BuscarDatosPersonalesReporte()" class="bton bton-second">
+                        <img src="~/../assets/images/lupa-buscador.svg" class="print-desktop" alt="buscar">
+                            <span class="ms-1">Buscar</span>
+                    </button>
+                    }
+                    @else if(datosPersonales != null){
+                    <button (click)="limpiar()" class="bton bton-first"><span>Nueva búsqueda</span>
+                    </button>
+                    }
                 </div>
             </div>
-
-        @if(nombreReporte.length > 0){
-            <div class="mt-5" (click)="descargarReporte()">
-                <a class="bton bton-second p-3"><b>Estado de Cuenta en línea</b></a>
-            </div>
-        }     
+        </div>
+        @if(datosPersonales != null && warning.length == 0){
+        <app-usuario [mostrarImprimir]="false"
+            [nombreCompleto]="this.datosPersonales.Nombre + ' ' + this.datosPersonales.ApellidoPaterno + ' ' + this.datosPersonales.ApellidoMaterno"
+            [tipoDocumento]="descTipoDocumento" [numeroDocumento]="numeroDocumento"></app-usuario>
+        <div class="botonera">
+            <button class="bton bton-second" (click)="generarReporte()">
+                <span class="ms-2"><b>Descargar Reporte de Aportes</b></span></button>
+            <button class="bton bton-second" (click)="openModal(sendMail)">
+                <span class="ms-2"><b>Enviar Reporte de Aportes</b></span></button>
+        </div>
+        }
 
         <div class="detail__page mt-5 fs-1">
-            <p>(Para visualizar este archivo debes contar con Acrobat Reader. Si no dispones de este, <span><a href="https://get.adobe.com/es/reader/" target="_blank">haga clic aquí</a></span>)</p>
+            <p>(Para visualizar este archivo debes contar con Acrobat Reader. Si no dispones de este, <span>
+                    <a href="https://get.adobe.com/es/reader/" target="_blank">haga clic aquí</a></span>)</p>
         </div>
         <div class="detail__page">
             <p>La información proporcionada es solo para fines de consulta, carece de valor legal.</p>
         </div>
     </div>
 </div>
+
+<!-- Modal Send Mail-->
+<ng-template #sendMail>
+    <div class="modal-header">
+        <img style="width: 1.5rem;" src="~/../assets/images/icon-email.svg" alt="mail">
+        <h5 style="margin-left: 1rem;" class="modal-title">Enviar correo electrónico</h5>
+    </div>
+    <div class="modal-body">
+        @if(!envioCorreoExitoso){
+        <div class="row mb-2">
+            <div class="col-12 text-center">
+                <p class="fw-bold">¿Deseas enviar la boleta de pago por correo electrónico?</p>
+            </div>
+        </div>
+        <form>
+            <div class="mb-2">
+                <label for="txtMail" class="form-label"><b>Correo Electrónico:</b></label>
+                <input [(ngModel)]="mailPopup" type="email" name="mail" class="form-control" id="txtMail"
+                    aria-describedby="emailHelp">
+            </div>
+            <div class="mb-1 w-100">
+                @if(warningEnvioCorreo.length > 1){
+                <label class="form-label text-danger"><b>* {{warningEnvioCorreo}}</b></label>
+                }
+            </div>
+        </form>
+        }
+        @else {
+        <div class="row mb-2">
+            <div class="col-12 text-center">
+                <p class="fw-bold">¡Envío de correo electrónico exitoso!</p>
+            </div>
+        </div>
+        }
+    </div>
+    <div class="modal-footer border-0">
+        <div class="w-100 d-flex justify-content-evenly mb-2">
+            <div>
+                <button class="bton bton-first" (click)="closeModal()" style="width: 8rem;">Cerrar</button>
+            </div>
+            <div>
+                <button class="bton" (click)="enviarCorreoReporte()"
+                    [ngClass]="{ 'bton-disabled': envioCorreoExitoso, 'bton-second': !envioCorreoExitoso }"
+                    [disabled]="envioCorreoExitoso" style="width: 8rem;">enviar</button>
+            </div>
+        </div>
+    </div>
+</ng-template>

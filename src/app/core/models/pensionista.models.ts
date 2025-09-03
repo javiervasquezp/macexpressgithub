@@ -55,7 +55,6 @@ export interface BoletasPagosModel {
     inConsPago: string; 
 	DetalleRegimenes: string;  
 }
-
 export interface Resolucion{
     IdPersona: number;
     TipoDocumento: string;
@@ -82,4 +81,24 @@ export interface ImprimirResolucion
     NumeroDocumento : string;
     Appcode : string;
     ResolucionResp : Resolucion;
+    NombreEntidad : string;
+    Correo : string;
+    Nombres : string;
+    NombreArchivo : string;
+}
+
+export interface SendConstanciaPagoRequest
+{
+    TipoDocumentoId : string;
+    NumeroDocumento : string;
+    NumReg : string;
+    Cuenta : string;
+    Emision : string;
+    CodProceso : string;
+    ISubProc : string;
+    Nombres : string;
+    NombreEntidad : string;
+    NombreArchivo : string;
+    Correo : string;
+    Periodo : string;
 }

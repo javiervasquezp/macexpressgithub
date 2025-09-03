@@ -5,7 +5,7 @@
 
     <div class="detail">
         <div class="container mb-3">
-            <div class="row">
+            <div class="row campos-busqueda">
                 <div class="col-sm form__right">
                     <b style="color: var(--second-color);">Tipo Documento</b>
                     <select  id="slc-tipodocumento"  class="form-control rounded-pill ng-pristine ng-valid ng-touched" 
@@ -27,12 +27,15 @@
                     <b>&nbsp; </b>
                     <div class="info__print info__print_search">
                         @if(!consultaExitosa){
-                        <a (click)="listarResoluciones()" class="bton bton-second"><img
-                                src="~/../assets/images/lupa-buscador.svg" class="print-desktop"
-                                alt="buscar">  <span>Buscar</span></a>
+                            <button (click)="listarResoluciones()" class="bton bton-second">
+                                <img src="~/../assets/images/lupa-buscador.svg" class="print-desktop"
+                                    alt="buscar"><span class="ms-1">Buscar</span>
+                            </button>
                         }
                         @else{
-                        <a (click)="limpiarCampos()" class="bton bton-second"><span>Nueva busqueda</span></a>
+                            <button (click)="limpiarCampos()" class="bton bton-second">
+                                <span>Nueva búsqueda</span>
+                            </button>
                         }
                     </div>
                 </div>
@@ -56,12 +59,14 @@
                         <div class="card-body">
                             <h5 class="card-title">Resolución N°</h5>
                             <p class="card-text">{{resolucion.CoDocu}}</p>
-                            <a href="#" class="btn btn-descargar" (click)="imprimir(resolucion);">Descargar</a>
+                            <div class="botonera-movil-card">
+                                <button class="btn btn-descargar" (click)="imprimir(resolucion);">Descargar</button>
+                                <button class="btn btn-descargar" (click)="onSendMailPDF(sendMail, resolucion);">Enviar</button>
+                            </div>
                         </div>
                     </div>
                 }
             </div>
-
             <div class="d-desktop">
 
                     <table class="table-app">
@@ -70,6 +75,7 @@
                                 <td>Tipo Resolución</td>
                                 <td>Resolución N°</td>
                                 <td>Descargar</td>
+                                <td>Enviar</td>
                             </tr>
                         </thead>
                         <tbody>
@@ -77,8 +83,14 @@
                                 <tr>
                                     <td>{{resolucion.DeSubtDocu}}</td>
                                     <td>{{resolucion.CoDocu}}</td>
-                                    <td style="text-align: center; vertical-align: middle;"><img (click)="imprimir(resolucion);"
-                                        src="~/../assets/images/icon-download.svg" alt="download" /></td>
+                                    <td style="text-align: center; vertical-align: middle;">
+                                        <img (click)="imprimir(resolucion);" src="~/../assets/images/icon-download.svg"
+                                            alt="download" />
+                                    </td>
+                                    <td style="text-align: center; vertical-align: middle;">
+                                        <img (click)="onSendMailPDF(sendMail, resolucion);" src="~/../assets/images/icon-send_mail.png"
+                                            alt="enviar" />
+                                    </td>
                                 </tr>
                             }
                         </tbody>
@@ -88,3 +100,61 @@
         }
     </div>
 </div>
+
+<!-- Modal Send Mail-->
+<ng-template #sendMail>
+    <div class="modal-header">
+        <img style="width: 1.5rem;" src="~/../assets/images/icon-email.svg" alt="mail">
+        <h5 style="margin-left: 1rem;" class="modal-title">Enviar correo electrónico</h5>
+    </div>
+    <div class="modal-body">
+        @if(!envioCorreoExitoso){
+        <div class="row mb-2">
+            <div class="col-12 text-center">
+                <p class="fw-bold">¿Deseas enviar la resolución por correo electrónico?</p>
+            </div>
+        </div>
+        <form>
+            <div class="mb-3">
+                <label for="txtDocumento" class="form-label"><b>Documento:</b></label>
+                <input [(ngModel)]="documentoResPopup" type="text" name="documento" 
+                    class="form-control" id="txtDocumento" disabled>
+            </div>
+            <div class="mb-3">
+                <label for="txtFechaEmisión" class="form-label"><b>Fecha de emisión:</b></label>
+                <input [(ngModel)]="fechaEmisionPopup" type="text" name="fechaEmisión"
+                    class="form-control" id="txtFechaEmisión" disabled>
+            </div>
+            <div class="mb-2">
+                <label for="txtMail" class="form-label"><b>Correo Electrónico:</b></label>
+                <input [(ngModel)]="mailPopup" type="email" name="mail" class="form-control" id="txtMail"
+                    aria-describedby="emailHelp">
+            </div>
+            <div class="mb-1 w-100">
+                @if(warningEnvioCorreo.length > 1){
+                <label class="form-label text-danger"><b>* {{warningEnvioCorreo}}</b></label>
+                }
+            </div>
+        </form>
+        }
+        @else {
+        <div class="row mb-2">
+            <div class="col-12 text-center">
+                <p class="fw-bold">¡Envío de correo electrónico exitoso!</p>
+            </div>
+        </div>
+        }
+    </div>
+    <div class="modal-footer border-0">
+        <div class="w-100 d-flex justify-content-evenly mb-2">
+            <div>
+                <button class="bton bton-first" (click)="closeModal()" style="width: 8rem;">Cerrar</button>
+            </div>
+            <div>
+                <button class="bton" (click)="sendMailClick()"
+                    [ngClass]="{ 'bton-disabled': envioCorreoExitoso, 'bton-second': !envioCorreoExitoso }"
+                    [disabled]="envioCorreoExitoso" style="width: 8rem;">enviar</button>
+            </div>
+        </div>
+    </div>
+</ng-template>

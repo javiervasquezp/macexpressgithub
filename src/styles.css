@@ -134,7 +134,7 @@ Date: 24/04/2023
 }
 
 .alert__message p {
-    font-size: 0.76rem;
+    font-size: 1.2rem;
     line-height: 1.3;
     margin-bottom: 0.15rem;
 }
@@ -527,7 +527,8 @@ span.spacing {
 
 .bton-disabled {
     background: var(--disabled-color);
-    color: var(--black-color) !important;
+    color: var(--text-color) !important;
+    cursor: not-allowed !important;
 }
 
 .title-servicios{
@@ -591,7 +592,7 @@ span.spacing {
     }
     
     .alert__message p {
-        font-size: 0.84rem;
+        font-size: 1rem;
     }
 
     /* Páginas internas */
@@ -779,7 +780,7 @@ span.spacing {
     }
     
     .alert__message p {
-        font-size: 0.9rem;
+        font-size: 1.2rem;
     }
 
     .zone__content {

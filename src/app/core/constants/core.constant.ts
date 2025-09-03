@@ -1,4 +1,4 @@
-export module CoreConstants {
+export namespace CoreConstants {
     export const LocalStorage = {
         Usuario: 'usuario',
         Token: 'app_token',
@@ -11,7 +11,8 @@ export module CoreConstants {
         ErrorNoControlado: "0002",
         OperacionIncorrectaDatos: "0003",
         NoAutorizado: "0004",
-        CambioClave: "0005"
+        CambioClave: "0005",
+        FueraHorario: "0013"
     };
 
     export const Mensajes = {
@@ -21,7 +22,10 @@ export module CoreConstants {
         SinDatos: "No se han encontrado datos.",
         DNIInvalido: "Ingresa un DNI de 8 dígitos valido.",
         OtroTipoDocumentoInvalido: "Ingresa un número de documento valido.",
-        SeleccionarDatosIdentidad: "Seleccionar el tipo y número de documento."
+        SeleccionarDatosIdentidad: "Seleccionar el tipo y número de documento.",
+        CorreoInvalido: "Ingresa un correo válido.",
+        RegistroNoSeleccionado: "Selecione un registro.",
+        AportanteNoSeleccionado: "Selecione o busca un aportante."
     };
 
     export const Titulos = {
@@ -86,16 +90,18 @@ export module CoreConstants {
         DNI: 'DI',
         Pasaporte: 'PS',
         CarneExtrajeria: 'CE'
+        
     };
 
     export const DescripcionTipoDocumentoIdentidad = {
         DNI: 'DNI',
         Pasaporte: 'PASAPORTE',
-        CarneExtrajeria: 'CARNET EXT.'
+        CarneExtrajeria: 'CARNET EXT.',
+        PTP: 'PTP'
     };
 
     export const AplicacionCode = {
-        MacExpressCode: 'MacExp'
+        MacExpressCode: 'MCEXP'
     };
 
     export const NombresReportes = {
@@ -103,4 +109,29 @@ export module CoreConstants {
         boletasPago: 'Boleta_De_Pago',
         resolucion: "Resolucion"
     };
+
+    export const DocumentosIdentidad= [
+        {
+            IdTipoDoc : DescripcionTipoDocumentoIdentidad.DNI,
+            DescDocumento : TipoDocumentoClaveVirtual.DNI
+        },
+        {
+            IdTipoDoc : DescripcionTipoDocumentoIdentidad.CarneExtrajeria,
+            DescDocumento : TipoDocumentoClaveVirtual.CE
+        },
+        {
+            IdTipoDoc : DescripcionTipoDocumentoIdentidad.Pasaporte,
+            DescDocumento : TipoDocumentoClaveVirtual.PASAPORTE
+        },
+        {
+            IdTipoDoc : DescripcionTipoDocumentoIdentidad.Pasaporte,
+            DescDocumento : TipoDocumentoClaveVirtual.PASAPORTE
+        }
+
+        /*
+        CE: 5,
+        PASAPORTE: 4,
+        PTP: 51
+        */
+    ];
 }

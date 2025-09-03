@@ -1,0 +1,142 @@
+.campos-busqueda {
+    margin-bottom: 1rem;
+}
+
+.campos-busqueda .bton {
+    width: 12rem !important;
+}
+
+.botonera {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+    margin-top: 3rem;
+}
+
+.botonera .bton {
+    width: 40% !important;
+}
+
+/* Responsive Web */
+@media screen and (min-width: 344px) {
+    .campos-busqueda .bton {
+        width: 100% !important;
+    }
+
+    .botonera {
+        width: 100%;
+        display: block;
+        margin-top: 3rem;
+    }
+
+    .botonera .bton {
+        width: 100% !important;
+        margin-bottom: 1rem;
+    }
+}
+
+@media screen and (min-width: 360px) {
+    .campos-busqueda .bton {
+        width: 100% !important;
+    }
+
+    .botonera {
+        width: 100%;
+        display: block;
+        margin-top: 3rem;
+    }
+
+    .botonera .bton {
+        width: 100% !important;
+        margin-bottom: 1rem;
+    }
+}
+
+@media screen and (min-width: 375px) {
+    .campos-busqueda .bton {
+        width: 100% !important;
+    }
+
+    .botonera {
+        width: 100%;
+        display: block;
+        margin-top: 3rem;
+    }
+
+    .botonera .bton {
+        width: 100% !important;
+        margin-bottom: 1rem;
+    }
+}
+
+@media screen and (min-width: 427px) {
+    .campos-busqueda .bton {
+        width: 100% !important;
+    }
+
+    .botonera {
+        width: 100%;
+        display: block;
+        margin-top: 3rem;
+    }
+
+    .botonera .bton {
+        width: 100% !important;
+        margin-bottom: 1rem;
+    }
+}
+
+@media screen and (min-width: 768px) {
+    .campos-busqueda .bton {
+        width: 12rem !important;
+    }
+
+    .botonera {
+        width: 100%;
+        display: flex;
+        flex-direction: row;
+        justify-content: space-evenly;
+        margin-top: 3rem;
+    }
+
+    .botonera .bton {
+        width: 40% !important;
+    }
+}
+
+@media screen and (min-width: 1224px) {
+    .campos-busqueda .bton {
+        width: 12rem  !important;
+    }
+
+    .botonera {
+        width: 100%;
+        display: flex;
+        flex-direction: row;
+        justify-content: space-evenly;
+        margin-top: 3rem;
+    }
+
+    .botonera .bton {
+        width: 40% !important;
+    }
+}
+
+@media screen and (min-width: 1800px) {
+    .campos-busqueda .bton {
+        width: 12rem !important;
+    }
+
+    .botonera {
+        width: 100%;
+        display: flex;
+        flex-direction: row;
+        justify-content: space-evenly;
+        margin-top: 3rem;
+    }
+
+    .botonera .bton {
+        width: 40% !important;
+    }
+}

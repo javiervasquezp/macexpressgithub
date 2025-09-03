@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit, TemplateRef, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { CoreConstants } from '@core/constants/core.constant';
@@ -13,18 +13,19 @@ import { FechasComponent } from '@shared/components/fechas/fechas.component';
 import { UsuarioComponent } from '@shared/components/usuario/usuario.component';
 import { CatalogoService } from '@shared/services/catalogo.service';
 import { AuthService } from 'app/auth/services/auth.service';
+import { BsModalRef, BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
 
 @Component({
-    selector: 'app-resoluciones',
-    imports: [
-        CommonModule,
-        AlertaComponent,
-        FormsModule,
-        UsuarioComponent,
-        FechasComponent
-    ],
-    templateUrl: './resoluciones.component.html',
-    styleUrl: './resoluciones.component.css'
+  selector: 'app-resoluciones',
+  imports: [
+    CommonModule,
+    AlertaComponent,
+    FormsModule,
+    UsuarioComponent,
+    FechasComponent
+  ],
+  templateUrl: './resoluciones.component.html',
+  styleUrl: './resoluciones.component.css'
 })
 export class ResolucionesComponent implements OnInit {
 
@@ -32,10 +33,18 @@ export class ResolucionesComponent implements OnInit {
   idTipoDocumento: string = "0";
   numeroDocumento: string = "";
   nombreCompleto: string = "";
+  nombres: string = "";
   consultaExitosa: boolean = false;
   tipoDocumento: string = "";
   resoluciones: Resolucion[] = [];
   fechaconsulta: string = "";
+  envioCorreoExitoso: boolean = false;
+  warningEnvioCorreo: string = "";
+  documentoResPopup: string = "";
+  fechaEmisionPopup: string = "";
+  mailPopup: string = "";
+  modalRef?: BsModalRef;
+  resolucionSelected: Resolucion | null = null;
 
   pensionistaSvc = inject(PensionistaService);
   authSvc = inject(AuthService);
@@ -45,6 +54,7 @@ export class ResolucionesComponent implements OnInit {
 
   private readonly utilSvc = inject(UtilsService);
   private readonly catalogoSvc = inject(CatalogoService);
+  private readonly modalService = inject(BsModalService);
 
   ngOnInit(): void {
     if (this.authSvc.isAuthenticate()) {
@@ -87,6 +97,7 @@ export class ResolucionesComponent implements OnInit {
 
               this.fechaconsulta = this.resoluciones.length > 0 ? response.Fecha : "";
               this.nombreCompleto = this.resoluciones.length > 0 ? this.resoluciones[0].NombresCompleto : "";
+              this.nombres = this.resoluciones.length > 0 ? this.resoluciones[0].Nombres : "";
               this.tipoDocumento = this.resoluciones.length > 0 ? this.resoluciones[0].TipoDocumentoAbrev : "";
               this.consultaExitosa = this.resoluciones.length > 0;
             }
@@ -108,6 +119,8 @@ export class ResolucionesComponent implements OnInit {
     objImprimir.TipoDocumentoId = Number.parseInt(this.idTipoDocumento);
     objImprimir.NumeroDocumento = this.numeroDocumento;
     objImprimir.Appcode = CoreConstants.AplicacionCode.MacExpressCode;
+    objImprimir.NombreEntidad = "Municipalidad Provincial De Chepen";
+    objImprimir.Nombres = this.nombres;
     objImprimir.ResolucionResp = resolucion;
 
     this.pensionistaSvc.imprimirResolucion(objImprimir).subscribe(
@@ -122,9 +135,9 @@ export class ResolucionesComponent implements OnInit {
             const link = document.createElement('a');
             link.href = url;
             link.download = this.tiposDocumentoIdentidad?.filter(
-                (tipoDoc) => tipoDoc.IdTipoDocumento.toString() == this.idTipoDocumento
-              )[0].DescripcionTipoDocumento.replaceAll(".", "").replaceAll(" ", "_") + "_" + 
-                              this.numeroDocumento + "_" + this.coreConstante.NombresReportes.resolucion;
+              (tipoDoc) => tipoDoc.IdTipoDocumento.toString() == this.idTipoDocumento
+            )[0].DescripcionTipoDocumento.replaceAll(".", "").replaceAll(" ", "_") + "_" +
+              this.numeroDocumento + "_" + this.coreConstante.NombresReportes.resolucion;
             link.click();
           }
         },
@@ -134,6 +147,85 @@ export class ResolucionesComponent implements OnInit {
         }
       }
     );
+  }
+
+  onSendMailPDF(template: TemplateRef<any>, resolucion: Resolucion) {
+    // debugger;
+    // console.log(resolucion);
+    this.resolucionSelected = resolucion;
+    this.documentoResPopup = resolucion.CoDocu;
+    this.fechaEmisionPopup = resolucion.FeEmi;
+
+    this.openModal(template);
+  }
+
+  openModal(template: TemplateRef<any>) {
+    const config: ModalOptions = {
+      // Evita cierre con click en el backdrop
+      ignoreBackdropClick: true,
+      // Evita cierre con la tecla ESC
+      keyboard: false,
+      // Clases para tamaño y centrar verticalmente
+      class: 'modal-md modal-dialog-centered'
+    };
+
+    this.modalRef = this.modalService.show(template, config);
+  }
+
+  sendMailClick() {
+    this.warningEnvioCorreo = "";
+
+    //debugger;
+
+    if (this.resolucionSelected == null) {
+      this.warningEnvioCorreo = this.coreConstante.Mensajes.RegistroNoSeleccionado;
+      return;
+    }
+    else if (this.mailPopup.trim().length < 1 || !this.utilSvc.esCorreoValido(this.mailPopup)) {
+      this.warningEnvioCorreo = this.coreConstante.Mensajes.CorreoInvalido;
+      return
+    }
+
+    var objImprimir: ImprimirResolucion = {} as ImprimirResolucion;
+
+    objImprimir.TipoDocumentoId = Number.parseInt(this.idTipoDocumento);
+    objImprimir.NumeroDocumento = this.numeroDocumento;
+    objImprimir.Appcode = CoreConstants.AplicacionCode.MacExpressCode;
+    objImprimir.NombreEntidad = "Municipalidad Provincial De Chepen";
+    objImprimir.Nombres = this.nombres;
+    objImprimir.ResolucionResp = this.resolucionSelected;
+    objImprimir.Correo = this.mailPopup;
+    objImprimir.NombreArchivo = this.tiposDocumentoIdentidad?.filter(
+      (tipoDoc) => tipoDoc.IdTipoDocumento.toString() == this.idTipoDocumento
+    )[0].DescripcionTipoDocumento.replaceAll(".", "").replaceAll(" ", "_") + "_" +
+      this.numeroDocumento + "_" + this.coreConstante.NombresReportes.resolucion;
+
+    this.pensionistaSvc.sendMailResolucion(objImprimir).subscribe(
+      {
+        next: (response: any) => {
+          //debugger;
+          //console.log(response);
+          let resultado = this.evaluarRespuestaEnvioCorreo(response);
+          if (resultado != null) {
+            //console.log(resultado);
+            this.envioCorreoExitoso = true;
+          }
+        },
+        error: (err: any) => {
+          this.warning = `<p class='alert__info'>${err}</p>`;
+        }
+      }
+    );
+  }
+
+  closeModal() {
+    this.modalRef?.hide();
+    this.documentoResPopup = "";
+    this.fechaEmisionPopup = "";
+    this.mailPopup = "";
+    this.envioCorreoExitoso = false;
+    this.warningEnvioCorreo = "";
+    this.resolucionSelected = null;
   }
 
   private selecionarMenuItem(selectItem: string): void {
@@ -190,6 +282,12 @@ export class ResolucionesComponent implements OnInit {
     this.numeroDocumento = "";
     this.nombreCompleto = "";
     this.consultaExitosa = false;
+    this.nombres = "";
+    this.envioCorreoExitoso = false;
+    this.warningEnvioCorreo = "";
+    this.documentoResPopup = "";
+    this.fechaEmisionPopup = "";
+    this.mailPopup = "";
   }
 
   evaluarRespuesta(res: any) {
@@ -211,6 +309,27 @@ export class ResolucionesComponent implements OnInit {
       }
     } else {
       this.warning = res.Message;
+    }
+  }
+
+  evaluarRespuestaEnvioCorreo(res: any) {
+    if (res.IsSuccess == true) {
+      switch (res.Codigo) {
+        case CoreConstants.CodigoRespuesta.OperacionExitosa:
+          return res;
+        case CoreConstants.CodigoRespuesta.OperacionNoEjecutada:
+          this.warningEnvioCorreo = res.Message; break;
+        case CoreConstants.CodigoRespuesta.ErrorNoControlado:
+          this.warningEnvioCorreo = CoreConstants.Mensajes.NoHayConexion; break;
+        case CoreConstants.CodigoRespuesta.OperacionIncorrectaDatos:
+          this.warningEnvioCorreo = res.Message; break;
+        case CoreConstants.CodigoRespuesta.NoAutorizado:
+          this.warningEnvioCorreo = CoreConstants.Mensajes.NoAutorizado; break;
+        case CoreConstants.CodigoRespuesta.CambioClave:
+          this.warningEnvioCorreo = res.Message; break;
+      }
+    } else {
+      this.warningEnvioCorreo = res.Message;
     }
   }
 

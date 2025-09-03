@@ -36,12 +36,13 @@
                     <b>&nbsp; </b>
                     <div class="info__print info__print_search">
                         @if(!consultaExitosa){
-                        <a (click)="verAportesObligatorios()" class="bton bton-second"><img
-                                src="~/../assets/images/lupa-buscador.svg" class="print-desktop" alt="buscar">
-                            <span>Buscar</span></a>
+                        <a (click)="verAportesObligatorios()" class="bton bton-second">
+                            <img src="~/../assets/images/lupa-buscador.svg" 
+                                class="print-desktop" alt="buscar">
+                            <span class="ms-1">Buscar</span></a>
                         }
                         @else{
-                            <a (click)="limpiar()" class="bton bton-second"><span>Nueva busqueda</span></a>
+                            <a (click)="limpiar()" class="bton bton-second"><span>Nueva búsqueda</span></a>
                         }
                     </div>
                 </div>

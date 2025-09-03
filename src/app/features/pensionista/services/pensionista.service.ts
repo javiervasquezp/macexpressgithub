@@ -1,7 +1,7 @@
 import { Injectable, inject } from '@angular/core';
 import { CoreConstants } from '@core/constants/core.constant';
 import { PensionistaApiConstants } from '@core/constants/pensionista-api.constant';
-import { ImprimirResolucion } from '@core/models/pensionista.models';
+import { ImprimirResolucion, SendConstanciaPagoRequest } from '@core/models/pensionista.models';
 import { environment } from '@envs/environment.development';
 import { ApiService } from '@services/api.service';
 import { catchError, map, throwError } from 'rxjs';
@@ -26,22 +26,7 @@ export class PensionistaService {
       }),
       catchError((err) => {
         console.log(err);
-        return throwError('Error inesperado en el servidor');
-      })
-    );
-  }
-
-  descargarConstancia(numReg:string,   cuenta:string,   emision:string,   codProceso :string,   iSubProc:string) {
-    //debugger;
-    const url=`${this.endPoint}`;
-    const path = PensionistaApiConstants.ConstanciaPago.GetConstanciaDePago+`/${numReg}/${cuenta}/${emision}/${codProceso}/${iSubProc}`; 
-    return this.apiService.get(url, path).pipe(
-      map((res:any) => {
-        return res;
-      }),
-      catchError((err) => {
-        console.log(err);
-        return throwError('Error inesperado en el servidor');
+        return throwError(() => new Error('Error inesperado en el servidor'));
       })
     );
   }
@@ -57,7 +42,7 @@ export class PensionistaService {
       }),
       catchError((err) => {
         console.log(err);
-        return throwError('Error inesperado en el servidor');
+        return throwError(() => new Error('Error inesperado en el servidor'));
       })
     );
   }
@@ -65,7 +50,7 @@ export class PensionistaService {
   imprimirResolucion(resolucion: ImprimirResolucion) {
     //debugger;
     const url=`${this.endPoint}`;
-    const path = PensionistaApiConstants.Resoluciones.PostImprimirResolucionLikeTotem; 
+    const path = PensionistaApiConstants.Resoluciones.PostImprimirResolucionNotificacionLikeTotem; 
 
     return this.apiService.post(url, path, resolucion).pipe(
       map((res:any) => {
@@ -73,7 +58,53 @@ export class PensionistaService {
       }),
       catchError((err) => {
         console.log(err);
-        return throwError('Error inesperado en el servidor');
+        return throwError(() => new Error('Error inesperado en el servidor'));
+      })
+    );
+  }
+
+  sendMailResolucion(resolucion: ImprimirResolucion) {
+    //debugger;
+    const url=`${this.endPoint}`;
+    const path = PensionistaApiConstants.Resoluciones.PostSendResolucionLikeTotem; 
+
+    return this.apiService.post(url, path, resolucion).pipe(
+      map((res:any) => {
+        return res;
+      }),
+      catchError((err) => {
+        console.log(err);
+        return throwError(() => new Error('Error inesperado en el servidor'));
+      })
+    );
+  }
+
+  obtenerBoletaPagoPdf(request: SendConstanciaPagoRequest) {
+    //debugger;
+    const url=`${this.endPoint}`;
+    const path = PensionistaApiConstants.ConstanciaPago.PostObtenerBoletaPagoPdf;
+    return this.apiService.post(url, path, request).pipe(
+      map((res:any) => {
+        return res;
+      }),
+      catchError((err) => {
+        console.log(err);
+        return throwError(() => new Error('Error inesperado en el servidor'));
+      })
+    );
+  }
+
+  sendMailBoletaPagoPdf(request: SendConstanciaPagoRequest) {
+    //debugger;
+    const url=`${this.endPoint}`;
+    const path = PensionistaApiConstants.ConstanciaPago.PostSendMailBoletaPagoPdf;
+    return this.apiService.post(url, path, request).pipe(
+      map((res:any) => {
+        return res;
+      }),
+      catchError((err) => {
+        console.log(err);
+        return throwError(() => new Error('Error inesperado en el servidor'));
       })
     );
   }

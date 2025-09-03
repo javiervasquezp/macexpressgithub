@@ -28,7 +28,7 @@ export class ApiService {
           }
       }
       err.message = errMsg;
-      return throwError(err);  
+      return throwError(() => new Error(err));
     } 
   }
 
@@ -68,19 +68,4 @@ export class ApiService {
       this.url
     ).pipe(catchError(this.formatErrors('delete')));
   }
-
-  // private setToken() : void{
-  //   if(this.authService.isAuthenticate()){
-  //     this.authAppToken = this.userService.getToken(CoreConstants.LocalStorage.Token);
-  //     this.httpOptions = {
-  //       headers: new HttpHeaders({
-  //         'Content-Type': 'application/json',
-  //         'Authorization': `Bearer ${this.authAppToken}`
-  //       })
-  //     };
-  //   }
-  //   else{
-  //     this.router.navigateByUrl(CoreConstants.Rutas.login);
-  //   } 
-  // }
 }

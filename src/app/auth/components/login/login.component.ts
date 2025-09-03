@@ -13,6 +13,8 @@ import { CatalogoService } from '@shared/services/catalogo.service';
 import { TiposDocumentoIdentidad } from '@core/models/tipos.model';
 import { ApplicationConstants } from '@shared/constants/application.constants';
 import { ToastrService } from 'ngx-toastr';
+import { MenuStoreService } from '@shared/services/menu-store.service';
+import { environment } from '@envs/environment.development';
 
 @Component({
     selector: 'app-login',
@@ -24,11 +26,12 @@ import { ToastrService } from 'ngx-toastr';
     styleUrl: './login.component.css'
 })
 export default class LoginComponent implements OnInit {
+  env = environment;
   warning: string = "";
   idTipoDocumento: string = "0";
   numeroDocumento: string = "";
   maxLengthDni: number = 15;
-  maxLengthClave: number = 6;
+  maxLengthClave: number = 20;
   clave: string = "";
   tiposDocumentoIdentidad!: TiposDocumentoIdentidad[] | undefined;
 
@@ -44,6 +47,8 @@ export default class LoginComponent implements OnInit {
   private readonly utilsvc = inject(UtilsService);
   private readonly catalogoSvc = inject(CatalogoService);
   private readonly router = inject(Router);
+  private readonly menuStoreSVC = inject(MenuStoreService);
+  
   private toastr = inject(ToastrService);
 
   constructor() {
@@ -78,7 +83,12 @@ export default class LoginComponent implements OnInit {
             let result = this.evaluarRespuesta(response);
 
             if (this.utilsvc.stringIsvalid(result)) {
+              if(! this.env.production){
+                console.log(result);
+              }
+              
               this.usersvc.setToken(result);
+              this.menuStoreSVC.loadMenu();
               this.router.navigateByUrl(CoreConstants.Rutas.boletasDePago);
             }
           },
@@ -146,6 +156,8 @@ export default class LoginComponent implements OnInit {
         case CoreConstants.CodigoRespuesta.NoAutorizado:
           this.warning = CoreConstants.Mensajes.NoAutorizado; break;
         case CoreConstants.CodigoRespuesta.CambioClave:
+          this.warning = res.Message; break;
+        case CoreConstants.CodigoRespuesta.FueraHorario:
           this.warning = res.Message; break;
       }
     } else {

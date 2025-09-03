@@ -90,7 +90,99 @@
     font-size: 1.2rem;
 }
 
+.campos-busqueda .bton {
+    width: 12rem !important;;
+}
+
+/* Responsive Web */
+@media screen and (min-width: 344px) {
+    .campos-busqueda .bton {
+        width: 100% !important;
+    }
+
+    .d-movil {
+        display: block;
+    }
+    
+    .d-desktop {
+        display: none;
+    }
+}
+
+@media screen and (min-width: 360px) {
+    .campos-busqueda .bton {
+        width: 100% !important;
+    }
+
+    .d-movil {
+        display: block;
+    }
+    
+    .d-desktop {
+        display: none;
+    }
+}
+
+@media screen and (min-width: 375px) {
+    .campos-busqueda .bton {
+        width: 100% !important;
+    }
+
+    .d-movil {
+        display: block;
+    }
+    
+    .d-desktop {
+        display: none;
+    }
+}
+
+@media screen and (min-width: 427px) {
+    .campos-busqueda .bton {
+        width: 100% !important;
+    }
+
+    .d-movil {
+        display: block;
+    }
+    
+    .d-desktop {
+        display: none;
+    }
+}
+
 @media screen and (min-width: 768px) {
+    .campos-busqueda .bton {
+        width: 12rem !important;
+    }
+
+    .d-movil {
+        display: none;
+    }
+    
+    .d-desktop {
+        display: block;
+    }
+}
+
+@media screen and (min-width: 1224px) {
+    .campos-busqueda .bton {
+        width: 12rem  !important;
+    }
+
+    .d-movil {
+        display: none;
+    }
+    
+    .d-desktop {
+        display: block;
+    }
+}
+
+@media screen and (min-width: 1800px) {
+    .campos-busqueda .bton {
+        width: 12rem !important;
+    }
 
     .d-movil {
         display: none;

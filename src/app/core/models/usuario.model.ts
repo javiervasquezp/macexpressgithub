@@ -1,22 +1,24 @@
 export interface Usuario {  
+    IdSession: string;
     UserId: string;
     NumDoc: string;
     TypeDoc: string;
     TypeUser: string;
     Nombre: string;
-    ApellidoPaterno: string;
+    ApellidoPaterno: string
     ApellidoMaterno: string;
     TypeDocDesc: string;
-    FullTypeDocDesc: string;
     DateSearchUtc: string;
     DateUpdateUtc: string;
-    TypeDocSnp: string;
-    TypeDocMccia: string;
-    TypeDocNstd: string;
-    TypeDocAportantes: string;
-    TypeDocCalculo: string;
-    TypeDocOnpVirtual: string;
-    DiaSemana: string;
+    Correo: string;
+    CodCelularPais: string;
+    Celular: string;
+    IdTituloRepresentacion: string;
+    TituloRepresentacion: string;
+    TipoDocumentoPerJuridicaId: string;
+    TipoDocumentoPerJuridica: string;
+    NumeroDocumentoPerJuridica: string;
+    RazonSocialPerJuridica: string;
     horaInicioUtc: string;
     horaFinUtc: string;
     exp: string;

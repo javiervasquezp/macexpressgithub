@@ -1,11 +1,13 @@
-export module PensionistaApiConstants {
+export namespace PensionistaApiConstants {
     export const ConstanciaPago = {
         GetByDocumentoIdentidad: '/ConstanciaPago/GetByDocumentoIdentidad',
-        GetConstanciaDePago: '/ConstanciaPago'        
+        PostObtenerBoletaPagoPdf: '/ConstanciaPago/PostObtenerBoletaPagoPdf',
+        PostSendMailBoletaPagoPdf: '/ConstanciaPago/PostSendMailBoletaPagoPdf'
     };
 
     export const Resoluciones = {
         GetResolucionesLikeTotem: '/Resoluciones/GetResolucionesLikeTotem',
-        PostImprimirResolucionLikeTotem: '/Resoluciones/PostImprimirResolucionLikeTotem'
+        PostImprimirResolucionNotificacionLikeTotem: '/Resoluciones/PostImprimirResolucionNotificacionLikeTotem',
+        PostSendResolucionLikeTotem: '/Resoluciones/PostSendResolucionLikeTotem'
     };
 }

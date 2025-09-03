@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { Usuario } from '@core/models/usuario.model';
 import { JwtHelperService } from '@auth0/angular-jwt';
 import { CoreConstants } from '@core/constants/core.constant';
+import { env } from 'process';
 
 @Injectable({
   providedIn: 'root'
@@ -54,7 +55,7 @@ export class UserService {
   }
 
   authlogon() {
-    //window.location.href=`${environment.authlogon}`;
+    // window.location.href=`${env.authlogon}`;
   }
 
   setToken(token: string) {

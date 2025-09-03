@@ -88,4 +88,10 @@ export class UtilsService {
 
     return new Date(year, month, day, hour, minuntes, seconds);
   }
+
+  esCorreoValido(email: string): boolean {
+    // Expresión regular para validación básica de email
+    const re = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    return re.test(email);
+  }
 }

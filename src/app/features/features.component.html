@@ -5,21 +5,35 @@
             <h2>TUS OPERACIONES</h2>
             <div class="menu__side">
                 <div class="side__item">
-                    <h3 class="title-servicios"><img loading="lazy" src="./../../assets/images/icon-home-menu.svg" alt="icon doc"> Servicios Disponibles</h3>
+                    <!-- @if( menus()){
+                        @for (menu of menus(); track $index) {
+                        <h3 class="title-servicios">
+                            <img loading="lazy" [src]="menu.Icono" [alt]="menu.IdServicio">Servicios Disponibles
+                        </h3>
+                        <ul id="ulMenu">
+                            @for (subMenu of menu.Detalle; track $index) {
+                            <li [ngClass]="{ 'ul-menu-li': !subMenu.Seleccionado , 'ul-menu-selected-li': subMenu.Seleccionado }"
+                                [id]="subMenu.IdServicio"><a (click)="navigateTo(subMenu)">- {{subMenu.NombreServicio}}</a>
+                            </li>
+                            }
+                        </ul>
+                        }
+                    } -->
+                    <!-- <h3 class="title-servicios"><img loading="lazy" src="./../../assets/images/icon-home-menu.svg" alt="icon doc"> Servicios Disponibles</h3>
                     <ul id="ulMenu">
                         <li class="ul-menu-li" [id]="coreConstant.Rutas.boletasDePago"
                             ><a (click)="navigateTo(coreConstant.Rutas.boletasDePago)">- Boletas de Pago</a></li>
                         <li class="ul-menu-li" [id]="coreConstant.Rutas.resoluciones"
                             ><a (click)="navigateTo(coreConstant.Rutas.resoluciones)">- Resoluciones</a></li>
                         <li class="ul-menu-li" [id]="coreConstant.Rutas.reporteAportes"
-                            ><a (click)="navigateTo(coreConstant.Rutas.reporteAportes)">- Reporte de aportes</a></li>
+                            ><a (click)="navigateTo(coreConstant.Rutas.reporteAportes)">- Reporte de aportes</a></li> -->
 
-                        <!-- Descomentar las líneas de código de abajo, para habiliatar de opción de ver los pagos de "Pago Facil"  -->
-                        <!-- 
+                    <!-- Descomentar las líneas de código de abajo, para habiliatar de opción de ver los pagos de "Pago Facil"  -->
+                    <!-- 
                             <li class="ul-menu-li" [id]="coreConstant.Rutas.pagoFacil">
                             <a (click)="navigateTo(coreConstant.Rutas.pagoFacil)">- Aportes facultativos</a></li> 
                         -->
-                    </ul>
+                    <!-- </ul> -->
                 </div>
             </div>
         </div>
@@ -28,4 +42,4 @@
         </section>
     </section>
 </section>
-<app-footer ></app-footer>
+<app-footer></app-footer>

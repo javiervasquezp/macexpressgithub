@@ -1,24 +1,28 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit, TemplateRef, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { CoreConstants } from '@core/constants/core.constant';
-import { TiposDocumentoIdentidad } from '@core/models/tipos.model';
+import { SendReporteAportesRequest } from '@core/models/aportante.model';
+import { DatosPersonales, TiposDocumentoIdentidad } from '@core/models/tipos.model';
 import { AportanteService } from '@features/aportante/services/aportante.service';
 import { UtilsService } from '@services/utils.service';
 import { AlertaComponent } from '@shared/components/alerta/alerta.component';
+import { UsuarioComponent } from '@shared/components/usuario/usuario.component';
 import { CatalogoService } from '@shared/services/catalogo.service';
 import { AuthService } from 'app/auth/services/auth.service';
+import { BsModalRef, BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
 
 @Component({
-    selector: 'app-reporte-aportes-acreditados',
-    imports: [
-        CommonModule,
-        AlertaComponent,
-        FormsModule
-    ],
-    templateUrl: './reporte-aportes-acreditados.component.html',
-    styleUrl: './reporte-aportes-acreditados.component.css'
+  selector: 'app-reporte-aportes-acreditados',
+  imports: [
+    CommonModule,
+    AlertaComponent,
+    UsuarioComponent,
+    FormsModule
+  ],
+  templateUrl: './reporte-aportes-acreditados.component.html',
+  styleUrl: './reporte-aportes-acreditados.component.css'
 })
 export class ReporteAportesAcreditadosComponent implements OnInit {
 
@@ -30,15 +34,22 @@ export class ReporteAportesAcreditadosComponent implements OnInit {
   contenidoReporte: string = "";
   idTipoDocumento: string = "0";
   numeroDocumento: string = "";
+  descTipoDocumento: string = "";
   consultaExitosa: boolean = false;
   tiposDocumentoIdentidad!: TiposDocumentoIdentidad[] | undefined;
   coreConstante = CoreConstants;
+  datosPersonales: DatosPersonales | null = null;
+  envioCorreoExitoso: boolean = false;
+  warningEnvioCorreo: string = "";
+  mailPopup: string = "";
+  modalRef?: BsModalRef;
 
   private readonly utilSvc = inject(UtilsService);
   private readonly aportanteSvc = inject(AportanteService);
   private readonly authSvc = inject(AuthService);
   private readonly router = inject(Router);
   private readonly catalogoSvc = inject(CatalogoService);
+  private readonly modalService = inject(BsModalService);
 
   ngOnInit(): void {
     if (this.authSvc.isAuthenticate()) {
@@ -84,6 +95,49 @@ export class ReporteAportesAcreditadosComponent implements OnInit {
     }
   }
 
+  BuscarDatosPersonalesReporte() {
+    this.warning = "";
+
+    if (Number.parseInt(this.idTipoDocumento) == 0 && this.numeroDocumento.length == 0) {
+      this.warning = `<p class='alert__info'>${CoreConstants.Mensajes.SeleccionarDatosIdentidad}</p>`;
+      return;
+    }
+    else if (Number.parseInt(this.idTipoDocumento) == CoreConstants.TipoDocumentoClaveVirtual.DNI &&
+      this.numeroDocumento.length < CoreConstants.TipoDocumentoLenght.DNI) {
+      this.warning = `<p class='alert__info'>${CoreConstants.Mensajes.DNIInvalido}</p>`;
+      return;
+    }
+    else if (Number.parseInt(this.idTipoDocumento) != CoreConstants.TipoDocumentoClaveVirtual.DNI &&
+      this.numeroDocumento.length < 1) {
+      this.warning = `<p class='alert__info'>${CoreConstants.Mensajes.OtroTipoDocumentoInvalido}</p>`;
+      return;
+    }
+    var request = {
+      TipoDocumentoId: Number.parseInt(this.idTipoDocumento),
+      NumeroDocumento: this.numeroDocumento
+    }
+
+    this.aportanteSvc.obtenerDatosPersonalesReporteAcreditados(request).subscribe(
+      {
+        next: (res: any) => {
+          // debugger;
+          // console.log(res);
+          let resultado = this.evaluarRespuesta(res);
+          if (resultado != null) {
+            this.datosPersonales = resultado as DatosPersonales;
+            //console.log(this.datosPersonales);
+            var tipoDocu = this.tiposDocumentoIdentidad?.filter((tipoDoc) => tipoDoc.IdTipoDocumento == this.datosPersonales?.TipoDocumentoId)[0].DescripcionTipoDocumento;
+            this.descTipoDocumento = tipoDocu != undefined || tipoDocu != null ? tipoDocu : "";
+          }
+        },
+        error: (err: any) => {
+          this.warning = `<p class='alert__info'>${err}</p>`;
+
+        }
+      }
+    );
+  }
+
   generarReporte() {
     this.warning = "";
 
@@ -102,19 +156,76 @@ export class ReporteAportesAcreditadosComponent implements OnInit {
       return;
     }
 
-    this.aportanteSvc.getEstadoReporteAportesAcreditados(this.idTipoDocumento, this.numeroDocumento).subscribe(
-      (res: any) => {
-        //debugger;
-        //console.log(res);
-        let resultado = this.evaluarRespuesta(res);
-        if (resultado != null) {
-          this.nombreReporte = resultado.nombre;
-          this.contenidoReporte = resultado.contenido;
-          this.consultaExitosa = true;
+    const request: SendReporteAportesRequest = {
+      TipoDocumentoId: this.datosPersonales?.TipoDocumentoId != null ? this.datosPersonales?.TipoDocumentoId : 0,
+      NumeroDocumento: this.datosPersonales?.NumeroDocumento != null ? this.datosPersonales?.NumeroDocumento : "",
+      Nombres: this.datosPersonales?.Nombre != null ? this.datosPersonales?.Nombre : "",
+      NombreEntidad: "Municipalidad Provincial De Chepen",
+      NombreArchivo: "",
+      Correo: ""
+    };
+
+    this.aportanteSvc.postAporteAcreditados(request).subscribe(
+      {
+        next: (res: any) => {
+          //debugger;
+          //console.log(res);
+          let resultado = this.evaluarRespuesta(res);
+          if (resultado != null) {
+            this.nombreReporte = resultado.nombre;
+            this.contenidoReporte = resultado.contenido;
+            this.consultaExitosa = true;
+            this.descargarReporte();
+          }
+        },
+        error: (err: any) => {
+          this.warning = `<p class='alert__info'>${err}</p>`;
+
         }
-      }, (err: any) => {
-        this.warning = `<p class='alert__info'>${err}</p>`;
-      });
+      }
+    );
+  }
+
+  enviarCorreoReporte() {
+
+    this.warningEnvioCorreo = "";
+    //debugger;
+    if (this.datosPersonales == null) {
+      this.warningEnvioCorreo = this.coreConstante.Mensajes.AportanteNoSeleccionado;
+      return;
+    }
+    else if (this.mailPopup.trim().length < 1 || !this.utilSvc.esCorreoValido(this.mailPopup)) {
+      this.warningEnvioCorreo = this.coreConstante.Mensajes.CorreoInvalido;
+      return
+    }
+
+    const request: SendReporteAportesRequest = {
+      TipoDocumentoId: this.datosPersonales?.TipoDocumentoId != null ? this.datosPersonales?.TipoDocumentoId : 0,
+      NumeroDocumento: this.datosPersonales?.NumeroDocumento != null ? this.datosPersonales?.NumeroDocumento : "",
+      Nombres: this.datosPersonales?.Nombre != null ? this.datosPersonales?.Nombre : "",
+      NombreEntidad: "Municipalidad Provincial De Chepen",
+      NombreArchivo: this.tiposDocumentoIdentidad?.filter(
+        (tipoDoc) => tipoDoc.IdTipoDocumento.toString() == this.idTipoDocumento
+      )[0].DescripcionTipoDocumento.replaceAll(".", "").replaceAll(" ", "_") + "_" +
+        this.numeroDocumento + "_" + CoreConstants.NombresReportes.aportesAcreditados,
+      Correo: this.mailPopup
+    };
+
+    this.aportanteSvc.postSendCorreoAporteAcreditados(request).subscribe(
+      {
+        next: (res: any) => {
+          // debugger;
+          // console.log(res);
+          let resultado = this.evaluarRespuesta(res);
+          if (resultado != null) {
+            this.envioCorreoExitoso = true;;
+          }
+        },
+        error: (err: any) => {
+          this.warning = `<p class='alert__info'>${err}</p>`;
+        }
+      }
+    );
   }
 
   descargarReporte() {
@@ -124,9 +235,9 @@ export class ReporteAportesAcreditadosComponent implements OnInit {
     const link = document.createElement('a');
     link.href = url;
     link.download = this.tiposDocumentoIdentidad?.filter(
-                      (tipoDoc) => tipoDoc.IdTipoDocumento.toString() == this.idTipoDocumento
-                    )[0].DescripcionTipoDocumento.replaceAll(".", "").replaceAll(" ", "_") + "_" + 
-                      this.numeroDocumento + "_" + CoreConstants.NombresReportes.aportesAcreditados;
+      (tipoDoc) => tipoDoc.IdTipoDocumento.toString() == this.idTipoDocumento
+    )[0].DescripcionTipoDocumento.replaceAll(".", "").replaceAll(" ", "_") + "_" +
+      this.numeroDocumento + "_" + CoreConstants.NombresReportes.aportesAcreditados;
     link.click();
   }
 
@@ -138,6 +249,8 @@ export class ReporteAportesAcreditadosComponent implements OnInit {
     this.numeroDocumento = ""
     this.idTipoDocumento = idTipoDoc;
     this.consultaExitosa = false;
+    this.descTipoDocumento = "";
+    this.datosPersonales = null;
   }
 
   tipoDocSelectChange(): void {
@@ -188,5 +301,25 @@ export class ReporteAportesAcreditadosComponent implements OnInit {
       }
     }
     return valid;
+  }
+
+  openModal(template: TemplateRef<any>) {
+    const config: ModalOptions = {
+      // Evita cierre con click en el backdrop
+      ignoreBackdropClick: true,
+      // Evita cierre con la tecla ESC
+      keyboard: false,
+      // Clases para tamaño y centrar verticalmente
+      class: 'modal-md modal-dialog-centered'
+    };
+
+    this.modalRef = this.modalService.show(template, config);
+  }
+
+  closeModal() {
+    this.modalRef?.hide();
+    this.envioCorreoExitoso = false;
+    this.warningEnvioCorreo = "";
+    this.mailPopup = "";
   }
 }

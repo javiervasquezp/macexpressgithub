@@ -1,46 +1,48 @@
 <div class="main__right">
-    <h2><img loading="lazy" src="~/../assets/images/icon-doc.svg" alt="icon doc"> {{coreConstante.Titulos.VerBoletasPago}}</h2>
+    <h2><img loading="lazy" src="~/../assets/images/icon-doc.svg" alt="icon doc">
+        {{coreConstante.Titulos.VerBoletasPago}}</h2>
     <app-alerta *ngIf="warning.length > 0" [msg]="warning"></app-alerta>
-
 
     <div class="detail">
         <div class="container mb-3">
-            <div class="row mb-1">
+            <div class="row mb-1 campos-busqueda">
                 <div class="col-sm form__right">
-                    <b style="color: var(--second-color);" >Tipo Documento</b>
-                    <select  id="slc-tipodocumento"  class="form-control rounded-pill ng-pristine ng-valid ng-touched" 
-                        [(ngModel)]="idTipoDocumento" (change)="tipoDocSelectChange()" 
-                        [disabled]="consultaExitosa">
+                    <b style="color: var(--second-color);">Tipo Documento</b>
+                    <select id="slc-tipodocumento" class="form-control rounded-pill ng-pristine ng-valid ng-touched"
+                        [(ngModel)]="idTipoDocumento" (change)="tipoDocSelectChange()" [disabled]="consultaExitosa">
                         <option value="0">Seleccione</option>
                         @for (tipoDocumento of tiposDocumentoIdentidad; track $index) {
-                        <option value="{{tipoDocumento.IdTipoDocumento}}">{{tipoDocumento.DescripcionTipoDocumento}}</option>
+                        <option value="{{tipoDocumento.IdTipoDocumento}}">{{tipoDocumento.DescripcionTipoDocumento}}
+                        </option>
                         }
                     </select>
                 </div>
                 <div class="col-sm">
                     <b>Número de Documento</b>
-                    <input [(ngModel)]="numeroDocumento" id="txt-numero" type="text"
-                            (keypress)="dniNumberOnly($event)" class="form-control rounded-pill" 
-                        [disabled]="cabecera != null || idTipoDocumento == '0'" [maxlength]="coreConstante.TipoDocumentoLenght.Otro"/>
+                    <input [(ngModel)]="numeroDocumento" id="txt-numero" type="text" (keypress)="dniNumberOnly($event)"
+                        class="form-control rounded-pill" [disabled]="cabecera != null || idTipoDocumento == '0'"
+                        [maxlength]="coreConstante.TipoDocumentoLenght.Otro" />
                 </div>
                 <div class="col-sm">
                     <b>&nbsp; </b>
                     <div class="info__print info__print_search">
                         @if(cabecera == null){
-                            <a (click)="listarBoletas()" class="bton bton-second"><img
-                                src="~/../assets/images/lupa-buscador.svg" class="print-desktop"
-                                alt="buscar"> <span>Buscar</span></a>
+                        <button (click)="listarBoletas()" class="bton bton-second">
+                            <img src="~/../assets/images/lupa-buscador.svg" class="print-desktop" alt="buscar">
+                            <span class="ms-1">Buscar</span>
+                        </button>
                         }
                         @else{
-                            <a (click)="limpiarCampos()" class="bton bton-second"><span>Nueva busqueda</span></a>
-                        }                    
+                        <button (click)="limpiarCampos()" class="bton bton-second"><span>Nueva búsqueda</span>
+                        </button>
+                        }
                     </div>
                 </div>
             </div>
         </div>
 
         @if(cabecera != null && warning.length == 0){
-        <app-usuario [mostrarImprimir]="true" (printHandler)="onClickPrint()" [nombreCompleto]="nombreCompleto"
+        <app-usuario [mostrarImprimir]="false" (printHandler)="onClickPrint()" [nombreCompleto]="nombreCompleto"
             [tipoDocumento]="tipoDocumento" [numeroDocumento]="numeroDocumento"></app-usuario>
         <div class="detail__page">
             <app-fechas [fechaconsulta]="fechaconsulta"></app-fechas>
@@ -67,7 +69,7 @@
 
                     </select>
                 </div>
-            </div>            
+            </div>
 
             <div class="table__regimen d-movil">
                 <ng-container *ngFor="let item of ListaBoletasPagos">
@@ -99,8 +101,21 @@
                                 <tr>
                                     <td class="title-column">Detalle de pago</td>
                                     <td class="table__items_td" *ngIf="item2.inConsPago=='1'">
-                                        <a style="cursor: pointer; text-decoration: none; color: white;"
-                                            class="bton bton-second" (click)="onClickdescargaPDF(item2);">Descargar</a>
+                                        <button
+                                            style="cursor: pointer; text-decoration: none; color: white; width: 80% !important;"
+                                            class="bton bton-second"
+                                            (click)="onClickdescargaPDF(item2);">Descargar</button>
+                                    </td>
+                                    <td class="table__items_td" *ngIf="item2.inConsPago!='1'">{{item2.fechaReintegro}}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="title-column">Enviar boleta</td>
+                                    <td class="table__items_td" *ngIf="item2.inConsPago=='1'">
+                                        <button
+                                            style="cursor: pointer; text-decoration: none; color: white; width: 80% !important;"
+                                            class="bton bton-second"
+                                            (click)="onSendMailPDF(sendMail, item2);">Enviar</button>
                                     </td>
                                     <td class="table__items_td" *ngIf="item2.inConsPago!='1'">{{item2.fechaReintegro}}
                                     </td>
@@ -112,16 +127,19 @@
 
             </div>
 
-            <div class ="d-desktop">
+            <div class="d-desktop">
                 <table class="table-app">
                     <thead>
                         <tr>
                             <th style="text-align: left; background-color: var(--second-color) !important; 
-                                        font-weight: normal !important; padding-top: 0.3rem; padding-bottom: 0.3rem;" 
-                                colspan=6>
-                                <span style="margin-left: 1.5rem;"><b>Régimen:</b> {{DetalleRegimenesFilter[0].Regimen}}</span>
-                                <span style="margin-left: 1.5rem;"><b>Cuenta:</b> {{DetalleRegimenesFilter[0].DetalleRegimenCuentas[0].Cuenta}}</span>
-                                <span style="margin-left: 1.5rem;"><b>Prestación:</b> {{DetalleRegimenesFilter[0].DetalleRegimenCuentas[0].Prestacion}}</span>
+                                        font-weight: normal !important; padding-top: 0.3rem; padding-bottom: 0.3rem;"
+                                colspan=7>
+                                <span style="margin-left: 1.5rem;"><b>Régimen:</b>
+                                    {{DetalleRegimenesFilter[0].Regimen}}</span>
+                                <span style="margin-left: 1.5rem;"><b>Cuenta:</b>
+                                    {{DetalleRegimenesFilter[0].DetalleRegimenCuentas[0].Cuenta}}</span>
+                                <span style="margin-left: 1.5rem;"><b>Prestación:</b>
+                                    {{DetalleRegimenesFilter[0].DetalleRegimenCuentas[0].Prestacion}}</span>
                             </th>
                         </tr>
                         <tr>
@@ -131,33 +149,100 @@
                             <th>Monto neto</th>
                             <th>Estado de pago</th>
                             <th>Descargar</th>
+                            <th>Enviar</th>
                         </tr>
                     </thead>
                     <tbody>
                         @for (item of ListaBoletasPagos; track $index) {
-                            @for (subItem of item; track $index) {
-                                <tr>
-                                    <td>{{subItem.desEntRepago}}</td>
-                                    <td style="text-align: center;">{{subItem.desEmision}}</td>
-                                    <td>{{subItem.simbMoneda}} {{subItem.montoPagoBruto}}</td>
-                                    <td>{{subItem.simbMoneda}} {{subItem.montoPagoNeto}}</td>
-                                    <td><span *ngIf="subItem.inConsPago=='1'">{{subItem.estPago}}</span></td>
-                                    <td style="text-align: center !important;"><span *ngIf="subItem.inConsPago=='1'"><img style="cursor:pointer;"
-                                        (click)="onClickdescargaPDF(subItem);"
-                                        src="~/../assets/images/icon-download.svg" alt="download"></span>
-                                        <span *ngIf="subItem.inConsPago!='1'">EMITIDO</span>
-                                        <span *ngIf="subItem.inConsPago!='1'">{{subItem.fechaReintegro}}</span>
-                                    </td>
-                                </tr>
-                            }
-                            
+                        @for (subItem of item; track $index) {
+                        <tr>
+                            <td>{{subItem.desEntRepago}}</td>
+                            <td style="text-align: center;">{{subItem.desEmision}}</td>
+                            <td>{{subItem.simbMoneda}} {{subItem.montoPagoBruto}}</td>
+                            <td>{{subItem.simbMoneda}} {{subItem.montoPagoNeto}}</td>
+                            <td><span *ngIf="subItem.inConsPago=='1'">{{subItem.estPago}}</span></td>
+                            <td style="text-align: center !important;">
+                                <span *ngIf="subItem.inConsPago=='1'">
+                                    <img style="cursor:pointer;" data-bs-toggle="tooltip" data-bs-placement="right"
+                                        title="Descargar boleta" (click)="onClickdescargaPDF(subItem);"
+                                        src="~/../assets/images/icon-download.svg" alt="download">
+                                </span>
+                                <span *ngIf="subItem.inConsPago!='1'">EMITIDO</span>
+                                <span *ngIf="subItem.inConsPago!='1'">{{subItem.fechaReintegro}}</span>
+                            </td>
+                            <td style="text-align: center !important;">
+                                <span *ngIf="subItem.inConsPago=='1'">
+                                    <img style="cursor:pointer;" data-bs-toggle="tooltip" data-bs-placement="right"
+                                        title="Enviar boleta" (click)="onSendMailPDF(sendMail, subItem);"
+                                        src="~/../assets/images/icon-send_mail.png" alt="Enviar">
+                                </span>
+                            </td>
+                        </tr>
+                        }
                         }
                     </tbody>
- 
-            </table>
+
+                </table>
             </div>
 
         </div>
         }
     </div>
 </div>
+
+<!-- Modal Send Mail-->
+<ng-template #sendMail>
+    <div class="modal-header">
+        <img style="width: 1.5rem;" src="~/../assets/images/icon-email.svg" alt="mail">
+        <h5 style="margin-left: 1rem;" class="modal-title">Enviar correo electrónico</h5>
+    </div>
+    <div class="modal-body">
+        @if(!envioCorreoExitoso){
+        <div class="row mb-2">
+            <div class="col-12 text-center">
+                <p class="fw-bold">¿Deseas enviar la boleta de pago por correo electrónico?</p>
+            </div>
+        </div>
+        <form>
+            <div class="mb-3">
+                <label for="txtPeriodo" class="form-label"><b>Periodo:</b></label>
+                <input [(ngModel)]="periodoPopup" type="text" name="periodo" class="form-control" id="txtPeriodo"
+                    disabled>
+            </div>
+            <div class="mb-3">
+                <label for="txtMonto" class="form-label"><b>Monto:</b></label>
+                <input [(ngModel)]="montoPopup" type="text" name="monto" class="form-control" id="txtMonto" disabled>
+            </div>
+            <div class="mb-2">
+                <label for="txtMail" class="form-label"><b>Correo Electrónico:</b></label>
+                <input [(ngModel)]="mailPopup" type="email" name="mail" class="form-control" id="txtMail"
+                    aria-describedby="emailHelp">
+            </div>
+            <div class="mb-1 w-100">
+                @if(warningEnvioCorreo.length > 1){
+                <label class="form-label text-danger"><b>* {{warningEnvioCorreo}}</b></label>
+                }
+            </div>
+        </form>
+        }
+        @else {
+        <div class="row mb-2">
+            <div class="col-12 text-center">
+                <p class="fw-bold">¡Envío de correo electrónico exitoso!</p>
+            </div>
+        </div>
+        }
+    </div>
+    <div class="modal-footer border-0">
+        <div class="w-100 d-flex justify-content-evenly mb-2">
+            <div>
+                <button class="bton bton-first" (click)="closeModal()" style="width: 8rem;">Cerrar</button>
+            </div>
+            <div>
+                <button class="bton" (click)="sendMailClick()"
+                    [ngClass]="{ 'bton-disabled': envioCorreoExitoso, 'bton-second': !envioCorreoExitoso }"
+                    [disabled]="envioCorreoExitoso" style="width: 8rem;">enviar</button>
+            </div>
+        </div>
+    </div>
+</ng-template>
